@@ -7,11 +7,10 @@ import {
   useEthers,
   Config,
 } from '@usedapp/core';
-import { Container } from '@mui/material';
+import { Container, Stack } from '@mui/material';
 import ResponsiveAppBar from './components/ResponsiveAppBar';
 import { Header } from './components/Header';
-import logo from './logo.svg';
-import './App.css';
+import { Main } from './components/Main';
 
 function App() {
   return (
@@ -20,7 +19,10 @@ function App() {
     }}>
       <ResponsiveAppBar />
       <Container maxWidth="xl">
-        <Header />
+        <Stack spacing={2}>
+          <Header />
+          <Main />
+        </Stack>
       </Container>
     </DAppProvider>
   );
