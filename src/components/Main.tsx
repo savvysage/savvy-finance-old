@@ -12,9 +12,10 @@ import busdIcon from "../icons/busd.png"
 import linkIcon from "../icons/link.png"
 
 export type Token = {
+    type: number
     address: string
     name: string
-    icon: string
+    icon: string[]
 }
 
 export const Main = () => {
@@ -27,10 +28,11 @@ export const Main = () => {
     const linkTokenAddress = chainId ? brownieConfig["networks"][networkName]["contracts"]["link_token"] : constants.AddressZero
 
     const tokens: Array<Token> = [
-        { address: svfTokenAddress, name: "SVF", icon: svfIcon },
-        { address: wbnbTokenAddress, name: "BNB", icon: bnbIcon },
-        { address: busdTokenAddress, name: "BUSD", icon: busdIcon },
-        { address: linkTokenAddress, name: "LINK", icon: linkIcon }
+        { type: 0, address: svfTokenAddress, name: "SVF", icon: [svfIcon] },
+        { type: 0, address: wbnbTokenAddress, name: "BNB", icon: [bnbIcon] },
+        { type: 0, address: busdTokenAddress, name: "BUSD", icon: [busdIcon] },
+        // { address: linkTokenAddress, name: "LINK", icon: linkIcon },
+        { type: 1, address: constants.AddressZero, name: "SVF-BUSD", icon: [svfIcon, busdIcon] },
     ]
 
     return (

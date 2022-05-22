@@ -1,15 +1,17 @@
 import * as React from 'react';
-import { Avatar, Box, Collapse, IconButton, Paper, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
+import { Avatar, Badge, Box, Collapse, IconButton, Paper, Stack, styled, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import { Token } from "./Main"
 
 function createData(
+    type: number,
     address: string,
     name: string,
-    icon: string,
+    icon: string[],
 ) {
     return {
+        type,
         address,
         name,
         icon,
@@ -31,6 +33,11 @@ function createData(
 function Row(props: { row: ReturnType<typeof createData> }) {
     const { row } = props;
     const [open, setOpen] = React.useState(false);
+    const SmallAvatar = styled(Avatar)(({ theme }) => ({
+        width: 22,
+        height: 22,
+        border: `2px solid ${theme.palette.background.paper}`,
+    }));
 
     return (
         <React.Fragment>
@@ -46,7 +53,17 @@ function Row(props: { row: ReturnType<typeof createData> }) {
                 </TableCell>
                 <TableCell component="th" scope="row">
                     <Stack direction="row" alignItems="center" spacing={1}>
-                        <Avatar alt={row.name + " Icon"} src={row.icon} />
+                        {row.type === 0 ? (<Avatar alt={row.name + " Icon"} src={row.icon[0]} />) : (
+                            <Badge
+                                overlap="circular"
+                                anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                                badgeContent={
+                                    <SmallAvatar alt={row.name + " Icon"} src={row.icon[1]} />
+                                }
+                            >
+                                <Avatar alt={row.name + " Icon"} src={row.icon[0]} />
+                            </Badge>
+                        )}
                         <Box>
                             <Typography variant="h6">Stake {row.name}</Typography>
                             <Typography variant="caption">Choose Reward Token</Typography>
@@ -115,7 +132,7 @@ interface WalletProps {
 export const StakingTable = ({ tokens }: WalletProps) => {
     var rows: any[] = []
     tokens.forEach((token) => {
-        rows.push(createData(token.address, token.name, token.icon))
+        rows.push(createData(token.type, token.address, token.name, token.icon))
 
     })
 
