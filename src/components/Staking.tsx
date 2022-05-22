@@ -46,10 +46,10 @@ function Row(props: { row: ReturnType<typeof createData> }) {
                 </TableCell>
                 <TableCell component="th" scope="row">
                     <Stack direction="row" alignItems="center" spacing={1}>
-                        <Avatar alt={row.name + "-icon"} src={row.icon} />
+                        <Avatar alt={row.name + " Icon"} src={row.icon} />
                         <Box>
                             <Typography variant="h6">Stake {row.name}</Typography>
-                            <Typography variant="caption">Earn Any</Typography>
+                            <Typography variant="caption">Choose Reward Token</Typography>
                         </Box>
                     </Stack>
                 </TableCell>
