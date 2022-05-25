@@ -5,15 +5,15 @@ import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import { Token } from "./Main"
 
 function createData(
-    type: number,
-    address: string,
+    address: string | undefined,
     name: string,
+    type: number,
     icon: string[],
 ) {
     return {
-        type,
         address,
         name,
+        type,
         icon,
         history: [
             {
@@ -125,14 +125,15 @@ function Row(props: { row: ReturnType<typeof createData> }) {
 }
 
 
-interface WalletProps {
-    tokens: Array<Token>
+interface StakingProps {
+    tokens: Array<Token> | undefined
 }
 
-export const StakingTable = ({ tokens }: WalletProps) => {
+export const StakingTable = ({ tokens }: StakingProps) => {
     var rows: any[] = []
-    tokens.forEach((token) => {
-        rows.push(createData(token.type, token.address, token.name, token.icon))
+    tokens?.forEach((token) => {
+        if (token !== undefined)
+            rows.push(createData(token.address, token.name, token.type, token.icon))
 
     })
 

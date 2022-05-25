@@ -1,43 +1,45 @@
-import { constants } from 'ethers'
-import { useEthers } from '@usedapp/core'
-import { Stack } from "@mui/material"
-import { Wallet } from './wallet'
+import { formatEther } from "ethers/lib/utils"
+import { Box } from "@mui/system"
+import { CircularProgress, Stack } from "@mui/material"
+import { useTokens, useTokensData } from "../hooks/savvy_finance_farm"
 import { StakingTable } from "./Staking"
-import helperConfig from "../helper-config.json"
-import brownieConfig from "../brownie-config.json"
-import networkMapping from "../chain-info/deployments/map.json"
-import svfIcon from "../icons/svf.png"
-import bnbIcon from "../icons/bnb.png"
-import busdIcon from "../icons/busd.png"
-import linkIcon from "../icons/link.png"
 
 export type Token = {
-    type: number
-    address: string
+    address: string | undefined
     name: string
+    type: number
     icon: string[]
 }
 
 export const Main = () => {
-    const { chainId } = useEthers()
-    const networkName = chainId ? helperConfig[String(chainId)] : "dev"
+    const tokenAddresses = useTokens()
+    const tokensData = useTokensData(tokenAddresses)
 
-    const svfTokenAddress = chainId ? networkMapping[String(chainId)]["TransparentUpgradeableProxy"][1] : constants.AddressZero
-    const wbnbTokenAddress = chainId ? brownieConfig["networks"][networkName]["contracts"]["wbnb_token"] : constants.AddressZero
-    const busdTokenAddress = chainId ? brownieConfig["networks"][networkName]["contracts"]["busd_token"] : constants.AddressZero
-    const linkTokenAddress = chainId ? brownieConfig["networks"][networkName]["contracts"]["link_token"] : constants.AddressZero
+    const tokens: Array<Token> = []
+    if (tokensData !== undefined) {
+        tokensData?.forEach((tokenData, index) => {
+            if (tokenData !== undefined) {
+                const address = tokenAddresses?.[index]
+                const name = tokenData["name"]
+                const type = parseInt(formatEther(tokenData["_type"]))
+                const icon = type === 0 ? [`/icons/${name.toLowerCase()}.png`] : [
+                    `/icons/${name.split("-")[0].toLowerCase()}.png`,
+                    `/icons/${name.split("-")[1].toLowerCase()}.png`
+                ]
+                const token: Token = { address: address, name: name, type: type, icon: icon }
+                tokens?.push(token)
+            }
+        })
+    }
 
-    const tokens: Array<Token> = [
-        { type: 0, address: svfTokenAddress, name: "SVF", icon: [svfIcon] },
-        { type: 0, address: wbnbTokenAddress, name: "BNB", icon: [bnbIcon] },
-        { type: 0, address: busdTokenAddress, name: "BUSD", icon: [busdIcon] },
-        // { address: linkTokenAddress, name: "LINK", icon: linkIcon },
-        { type: 1, address: constants.AddressZero, name: "SVF-BUSD", icon: [svfIcon, busdIcon] },
-    ]
-
-    return (
+    if (tokens !== undefined) return (
         <Stack spacing={2}>
             <StakingTable tokens={tokens} />
         </Stack>
+    )
+    else return (
+        <Box sx={{ display: 'flex' }}>
+            <CircularProgress />
+        </Box>
     )
 }
