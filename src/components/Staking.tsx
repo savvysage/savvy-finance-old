@@ -9,12 +9,16 @@ function createData(
     name: string,
     type: number,
     icon: string[],
+    balance: number,
+    stakingApr: number
 ) {
     return {
         address,
         name,
         type,
         icon,
+        balance,
+        stakingApr,
         history: [
             {
                 date: '2020-01-05',
@@ -72,7 +76,7 @@ function Row(props: { row: ReturnType<typeof createData> }) {
                 </TableCell>
                 <TableCell align="right">
                     <Typography variant="subtitle2">Total Staked</Typography>
-                    <Typography>0.0</Typography>
+                    <Typography>{row.balance.toLocaleString('en-us')}</Typography>
                     <Typography variant="body2">0 USD</Typography>
                 </TableCell>
                 <TableCell align="right">
@@ -82,7 +86,7 @@ function Row(props: { row: ReturnType<typeof createData> }) {
                 </TableCell>
                 <TableCell align="right">
                     <Typography variant="subtitle2">APR</Typography>
-                    <Typography>0%</Typography>
+                    <Typography>{row.stakingApr.toLocaleString('en-us')}%</Typography>
                 </TableCell>
             </TableRow>
             <TableRow>
@@ -132,8 +136,8 @@ interface StakingProps {
 export const StakingTable = ({ tokens }: StakingProps) => {
     var rows: any[] = []
     tokens?.forEach((token) => {
-        if (token !== undefined)
-            rows.push(createData(token.address, token.name, token.type, token.icon))
+        if (token !== undefined) if (token.isActive === true)
+            rows.push(createData(token.address, token.name, token.type, token.icon, token.balance, token.stakingApr))
 
     })
 

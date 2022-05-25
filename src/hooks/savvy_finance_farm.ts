@@ -22,8 +22,9 @@ export const useContract = (): Contract => {
 }
 
 export const useTokens = (): string[] | undefined => {
+    const contract = useContract()
     const { value, error } = useCall({
-        contract: useContract(),
+        contract: contract,
         method: 'getTokens',
         args: []
     }) ?? {}
@@ -34,6 +35,24 @@ export const useTokens = (): string[] | undefined => {
     }
 
     return value?.[0]
+}
+
+export const useTokensAreActive = (tokenAddresses: string[] | undefined): boolean[] | undefined => {
+    const contract = useContract()
+    const calls = tokenAddresses?.map(tokenAddress => ({
+        contract: contract,
+        method: 'tokenIsActive',
+        args: [tokenAddress]
+    })) ?? []
+
+    const results = useCalls(calls) ?? []
+    results.forEach((result, index) => {
+        if (result && result.error) {
+            console.error(`${calls[index]?.contract.address}: ${result.error.message}`)
+        }
+    })
+
+    return results.map(result => result?.value?.[0])
 }
 
 export const useTokensData = (tokenAddresses: string[] | undefined): string[] | undefined => {

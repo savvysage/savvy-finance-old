@@ -1,18 +1,22 @@
 import { formatEther } from "ethers/lib/utils"
 import { Box } from "@mui/system"
 import { CircularProgress, Stack } from "@mui/material"
-import { useTokens, useTokensData } from "../hooks/savvy_finance_farm"
+import { useTokens, useTokensAreActive, useTokensData } from "../hooks/savvy_finance_farm"
 import { StakingTable } from "./Staking"
 
 export type Token = {
     address: string | undefined
+    isActive: boolean | undefined
     name: string
     type: number
     icon: string[]
+    balance: number
+    stakingApr: number
 }
 
 export const Main = () => {
     const tokenAddresses = useTokens()
+    const tokensAreActive = useTokensAreActive(tokenAddresses)
     const tokensData = useTokensData(tokenAddresses)
 
     const tokens: Array<Token> = []
@@ -20,13 +24,19 @@ export const Main = () => {
         tokensData?.forEach((tokenData, index) => {
             if (tokenData !== undefined) {
                 const address = tokenAddresses?.[index]
+                const isActive = tokensAreActive?.[index]
                 const name = tokenData["name"]
                 const type = parseInt(formatEther(tokenData["_type"]))
                 const icon = type === 0 ? [`/icons/${name.toLowerCase()}.png`] : [
                     `/icons/${name.split("-")[0].toLowerCase()}.png`,
                     `/icons/${name.split("-")[1].toLowerCase()}.png`
                 ]
-                const token: Token = { address: address, name: name, type: type, icon: icon }
+                const balance = parseFloat(formatEther(tokenData["balance"]))
+                const stakingApr = parseFloat(formatEther(tokenData["stakingApr"]))
+                const token: Token = {
+                    address: address, isActive: isActive, name: name, type: type,
+                    icon: icon, balance: balance, stakingApr: stakingApr
+                }
                 tokens?.push(token)
             }
         })
