@@ -10,6 +10,7 @@ function createData(
     type: number,
     icon: string[],
     balance: number,
+    price: number,
     stakingApr: number
 ) {
     return {
@@ -18,6 +19,7 @@ function createData(
         type,
         icon,
         balance,
+        price,
         stakingApr,
         history: [
             {
@@ -137,8 +139,10 @@ export const StakingTable = ({ tokens }: StakingProps) => {
     var rows: any[] = []
     tokens?.forEach((token) => {
         if (token !== undefined) if (token.isActive === true)
-            rows.push(createData(token.address, token.name, token.type, token.icon, token.balance, token.stakingApr))
-
+            rows.push(createData(
+                token.address, token.name, token.type, token.icon,
+                token.balance, token.price, token.stakingApr
+            ))
     })
 
     return (

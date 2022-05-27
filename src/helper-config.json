@@ -1,5 +1,7 @@
 {
-    "4": "rinkeby",
-    "97": "bsc-test",
-    "56": "bsc-main"
+    "networks": {
+        "4": "rinkeby",
+        "97": "bsc-test",
+        "56": "bsc-main"
+    }
 }
