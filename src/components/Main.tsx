@@ -49,29 +49,6 @@ export const Main = () => {
             }
         })
     console.log(tokens)
-    // if (tokensData !== undefined && tokensPrices.length !== 0) {
-    //     tokensData?.forEach((tokenData, index) => {
-    //         if (tokenData !== undefined) {
-    //             const address = tokensAddresses?.[index]
-    //             const isActive = tokensAreActive?.[index]
-    //             const name = tokenData["name"]
-    //             const type = parseInt(formatEther(tokenData["_type"]))
-    // const icon = type === 0 ? [`/icons/${name.toLowerCase()}.png`] : [
-    //     `/icons/${name.split("-")[0].toLowerCase()}.png`,
-    //     `/icons/${name.split("-")[1].toLowerCase()}.png`
-    // ]
-    //             const balance = parseFloat(formatEther(tokenData["balance"]))
-    //             const price = 6
-    //             // const price = tokensPrices[index]
-    //             const stakingApr = parseFloat(formatEther(tokenData["stakingApr"]))
-    //             const token: Token = {
-    //                 address: address, isActive: isActive, name: name, type: type,
-    //                 icon: icon, balance: balance, price: price, stakingApr: stakingApr
-    //             }
-    //             tokens?.push(token)
-    //         }
-    //     })
-    // }
 
     return (
         <Box sx={{ display: 'flex' }}>
