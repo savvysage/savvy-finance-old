@@ -8,14 +8,14 @@ import contractAddresses from "../chain-info/deployments/map.json"
 import SavvyFinanceFarm from "../chain-info/contracts/SavvyFinanceFarm.json"
 
 export type TokenData = {
-    name?: string
-    type?: number
-    balance?: number
-    stakeFee?: number
-    unstakeFee?: number
-    stakingApr?: number
-    rewardToken?: string
-    admin?: string
+    name: string
+    type: number
+    balance: number
+    stakeFee: number
+    unstakeFee: number
+    stakingApr: number
+    rewardToken: string
+    admin: string
 }
 
 export const useContract = (): Contract => {
@@ -64,8 +64,8 @@ export const useTokensAreActive = (tokensAddresses: string[]): boolean[] => {
     return tokensAreActive
 }
 
-export const useTokensData = (tokensAddresses: string[]): TokenData[] => {
-    var tokensData: TokenData[] = [{}];
+export const useTokensData = (tokensAddresses: string[]): TokenData[] | [] => {
+    var tokensData: TokenData[] | [] = [];
 
     const contract = useContract()
     const calls = tokensAddresses.map(tokenAddress => ({

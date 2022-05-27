@@ -137,13 +137,13 @@ interface StakingProps {
 
 export const StakingTable = ({ tokens }: StakingProps) => {
     var rows: any[] = []
-    tokens?.forEach((token) => {
-        if (token !== undefined) if (token.isActive === true)
-            rows.push(createData(
-                token.address, token.name, token.type, token.icon,
-                token.balance, token.price, token.stakingApr
-            ))
-    })
+    // tokens?.forEach((token) => {
+    //     if (token !== undefined) if (token.isActive === true)
+    //         rows.push(createData(
+    //             token.address, token.name, token.type, token.icon,
+    //             token.balance, token.price, token.stakingApr
+    //         ))
+    // })
 
     return (
         <Box mx={{ 'md': '7.5%' }}>

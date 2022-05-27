@@ -1,30 +1,54 @@
-import { formatEther } from "ethers/lib/utils"
 import { Box } from "@mui/system"
 import { CircularProgress, Stack } from "@mui/material"
-import { TokenData, useTokens, useTokensAreActive, useTokensData, useTokensPrices } from "../hooks/savvy_finance_farm"
 import { StakingTable } from "./Staking"
 import { getContractAddress } from "../common"
+import * as svfFarm from "../hooks/savvy_finance_farm"
 
 export type Token = {
     address: string
     isActive: boolean
     name: string
     type: number
-    icon: string[]
-    balance: number
     price: number
+    balance: number
+    stakeFee: number
+    unstakeFee: number
     stakingApr: number
+    rewardToken: string
+    admin: string
+    icon: string[]
 }
 
 export const Main = () => {
-    const tokensAddresses: string[] = useTokens()
-    const tokensAreActive: boolean[] = useTokensAreActive(tokensAddresses)
-    const tokensData: TokenData[] = useTokensData(tokensAddresses)
+    const tokensAddresses: string[] = svfFarm.useTokens()
+    const tokensAreActive: boolean[] = svfFarm.useTokensAreActive(tokensAddresses)
+    const tokensData: svfFarm.TokenData[] = svfFarm.useTokensData(tokensAddresses)
     const tokensMainnetAddresses = tokensData.map(tokenData => getContractAddress(
         tokenData?.name?.toLowerCase() + "_token", "bsc-main"
     ))
-    const tokensPrices: number[] = useTokensPrices(tokensMainnetAddresses)
-    // const tokens: Array<Token> = []
+    const tokensPrices: number[] = svfFarm.useTokensPrices(tokensMainnetAddresses)
+
+    const tokens: Token[] = []
+    if (tokensAddresses.length !== 0)
+        if (
+            tokensAreActive.length === tokensAddresses.length &&
+            tokensData.length === tokensAddresses.length &&
+            tokensPrices.length === tokensAddresses.length
+        ) tokensAddresses.forEach((tokenAddress, index) => {
+            tokens[index] = {
+                address: tokenAddress, isActive: tokensAreActive[index],
+                name: tokensData[index].name, type: tokensData[index].type,
+                price: tokensPrices[index], balance: tokensData[index].balance,
+                stakeFee: tokensData[index].stakeFee, unstakeFee: tokensData[index].unstakeFee,
+                stakingApr: tokensData[index].stakingApr, rewardToken: tokensData[index].rewardToken,
+                admin: tokensData[index].admin, icon: tokensData[index].type === 0 ?
+                    [`/icons/${tokensData[index].name?.toLowerCase()}.png`] : [
+                        `/icons/${tokensData[index].name?.split("-")[0].toLowerCase()}.png`,
+                        `/icons/${tokensData[index].name?.split("-")[1].toLowerCase()}.png`
+                    ]
+            }
+        })
+    console.log(tokens)
     // if (tokensData !== undefined && tokensPrices.length !== 0) {
     //     tokensData?.forEach((tokenData, index) => {
     //         if (tokenData !== undefined) {
@@ -32,10 +56,10 @@ export const Main = () => {
     //             const isActive = tokensAreActive?.[index]
     //             const name = tokenData["name"]
     //             const type = parseInt(formatEther(tokenData["_type"]))
-    //             const icon = type === 0 ? [`/icons/${name.toLowerCase()}.png`] : [
-    //                 `/icons/${name.split("-")[0].toLowerCase()}.png`,
-    //                 `/icons/${name.split("-")[1].toLowerCase()}.png`
-    //             ]
+    // const icon = type === 0 ? [`/icons/${name.toLowerCase()}.png`] : [
+    //     `/icons/${name.split("-")[0].toLowerCase()}.png`,
+    //     `/icons/${name.split("-")[1].toLowerCase()}.png`
+    // ]
     //             const balance = parseFloat(formatEther(tokenData["balance"]))
     //             const price = 6
     //             // const price = tokensPrices[index]
