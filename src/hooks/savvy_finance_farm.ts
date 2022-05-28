@@ -8,8 +8,10 @@ import contractAddresses from "../chain-info/deployments/map.json"
 import SavvyFinanceFarm from "../chain-info/contracts/SavvyFinanceFarm.json"
 
 export type TokenData = {
+    isActive: boolean
     name: string
     type: number
+    price: number
     balance: number
     stakeFee: number
     unstakeFee: number
@@ -45,25 +47,6 @@ export const useTokens = (): string[] => {
     return tokens
 }
 
-export const useTokensAreActive = (tokensAddresses: string[]): boolean[] => {
-    var tokensAreActive: boolean[] = []
-
-    const contract = useContract()
-    const calls = tokensAddresses.map(tokenAddress => ({
-        contract: contract,
-        method: 'tokenIsActive',
-        args: [tokenAddress]
-    })) ?? []
-    const results = useCalls(calls) ?? []
-
-    results.forEach((result, index) => {
-        if (result?.value) tokensAreActive[index] = result.value[0]
-        if (result?.error) console.error(tokensAddresses[index], result.error.message)
-    })
-
-    return tokensAreActive
-}
-
 export const useTokensData = (tokensAddresses: string[]): TokenData[] | [] => {
     var tokensData: TokenData[] | [] = [];
 
@@ -77,8 +60,10 @@ export const useTokensData = (tokensAddresses: string[]): TokenData[] | [] => {
 
     results.forEach((result, index) => {
         if (result?.value) {
+            const isActive = result.value["isActive"]
             const name = result.value["name"]
-            const type = parseInt(formatEther(result.value["_type"]))
+            const type = parseInt(result.value["_type"])
+            const price = parseFloat(formatEther(result.value["price"]))
             const balance = parseFloat(formatEther(result.value["balance"]))
             const stakeFee = parseInt(formatEther(result.value["stakeFee"]))
             const unstakeFee = parseInt(formatEther(result.value["unstakeFee"]))
@@ -86,10 +71,9 @@ export const useTokensData = (tokensAddresses: string[]): TokenData[] | [] => {
             const rewardToken = result.value["rewardToken"]
             const admin = result.value["admin"]
             tokensData[index] = {
-                name: name, type: type, balance: balance,
-                stakeFee: stakeFee, unstakeFee: unstakeFee,
-                stakingApr: stakingApr, rewardToken: rewardToken,
-                admin: admin
+                isActive: isActive, name: name, type: type, price: price,
+                balance: balance, stakeFee: stakeFee, unstakeFee: unstakeFee,
+                stakingApr: stakingApr, rewardToken: rewardToken, admin: admin
             }
         }
         if (result?.error) console.error(tokensAddresses[index], result.error.message)

@@ -21,33 +21,29 @@ export type Token = {
 
 export const Main = () => {
     const tokensAddresses: string[] = svfFarm.useTokens()
-    const tokensAreActive: boolean[] = svfFarm.useTokensAreActive(tokensAddresses)
     const tokensData: svfFarm.TokenData[] = svfFarm.useTokensData(tokensAddresses)
-    const tokensMainnetAddresses = tokensData.map(tokenData => getContractAddress(
-        tokenData?.name?.toLowerCase() + "_token", "bsc-main"
-    ))
-    const tokensPrices: number[] = svfFarm.useTokensPrices(tokensMainnetAddresses)
+    // const tokensMainnetAddresses = tokensData.map(tokenData => getContractAddress(
+    //     tokenData?.name?.toLowerCase() + "_token", "bsc-main"
+    // ))
+    // const tokensPrices: number[] = svfFarm.useTokensPrices(tokensMainnetAddresses)
 
     const tokens: Token[] = []
     if (tokensAddresses.length !== 0)
-        if (
-            tokensAreActive.length === tokensAddresses.length
-            && tokensData.length === tokensAddresses.length
-            && tokensPrices.length === tokensAddresses.length
-        ) tokensAddresses.forEach((tokenAddress, index) => {
-            tokens[index] = {
-                address: tokenAddress, isActive: tokensAreActive[index],
-                name: tokensData[index].name, type: tokensData[index].type,
-                price: tokensPrices[index], balance: tokensData[index].balance,
-                stakeFee: tokensData[index].stakeFee, unstakeFee: tokensData[index].unstakeFee,
-                stakingApr: tokensData[index].stakingApr, rewardToken: tokensData[index].rewardToken,
-                admin: tokensData[index].admin, icon: tokensData[index].type === 0 ?
-                    [`/icons/${tokensData[index].name.toLowerCase()}.png`] : [
-                        `/icons/${tokensData[index].name.split("-")[0].toLowerCase()}.png`,
-                        `/icons/${tokensData[index].name.split("-")[1].toLowerCase()}.png`
-                    ]
-            }
-        })
+        if (tokensData.length === tokensAddresses.length)
+            tokensAddresses.forEach((tokenAddress, index) => {
+                tokens[index] = {
+                    address: tokenAddress, isActive: tokensData[index].isActive,
+                    name: tokensData[index].name, type: tokensData[index].type,
+                    price: tokensData[index].price, balance: tokensData[index].balance,
+                    stakeFee: tokensData[index].stakeFee, unstakeFee: tokensData[index].unstakeFee,
+                    stakingApr: tokensData[index].stakingApr, rewardToken: tokensData[index].rewardToken,
+                    admin: tokensData[index].admin, icon: tokensData[index].type === 0 ?
+                        [`/icons/${tokensData[index].name.toLowerCase()}.png`] : [
+                            `/icons/${tokensData[index].name.split("-")[0].toLowerCase()}.png`,
+                            `/icons/${tokensData[index].name.split("-")[1].toLowerCase()}.png`
+                        ]
+                }
+            })
 
     if (tokens.length !== 0) return (
         <Stack spacing={2}>
