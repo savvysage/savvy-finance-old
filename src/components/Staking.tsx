@@ -5,22 +5,10 @@ import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import { Token } from "./Main"
 
 function createData(
-    address: string | undefined,
-    name: string,
-    type: number,
-    icon: string[],
-    balance: number,
-    price: number,
-    stakingApr: number
+    token: Token
 ) {
     return {
-        address,
-        name,
-        type,
-        icon,
-        balance,
-        price,
-        stakingApr,
+        token,
         history: [
             {
                 date: '2020-01-05',
@@ -59,27 +47,29 @@ function Row(props: { row: ReturnType<typeof createData> }) {
                 </TableCell>
                 <TableCell component="th" scope="row">
                     <Stack direction="row" alignItems="center" spacing={1}>
-                        {row.type === 0 ? (<Avatar alt={row.name + " Icon"} src={row.icon[0]} />) : (
+                        {row.token.type === 0 ? (<Avatar alt={row.token.name + " Icon"} src={row.token.icon[0]} />) : (
                             <Badge
                                 overlap="circular"
                                 anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
                                 badgeContent={
-                                    <SmallAvatar alt={row.name + " Icon"} src={row.icon[1]} />
+                                    <SmallAvatar alt={row.token.name + " Icon"} src={row.token.icon[1]} />
                                 }
                             >
-                                <Avatar alt={row.name + " Icon"} src={row.icon[0]} />
+                                <Avatar alt={row.token.name + " Icon"} src={row.token.icon[0]} />
                             </Badge>
                         )}
                         <Box>
-                            <Typography variant="h6">Stake {row.name}</Typography>
+                            <Typography variant="h6">Stake {row.token.name}</Typography>
                             <Typography variant="caption">Choose Reward Token</Typography>
                         </Box>
                     </Stack>
                 </TableCell>
                 <TableCell align="right">
                     <Typography variant="subtitle2">Total Staked</Typography>
-                    <Typography>{row.balance.toLocaleString('en-us')}</Typography>
-                    <Typography variant="body2">0 USD</Typography>
+                    <Typography>{row.token.balance.toLocaleString('en-us')}</Typography>
+                    <Typography variant="body2">
+                        {(row.token.price * row.token.balance).toLocaleString('en-us')} USD
+                    </Typography>
                 </TableCell>
                 <TableCell align="right">
                     <Typography variant="subtitle2">Your Stake</Typography>
@@ -88,7 +78,7 @@ function Row(props: { row: ReturnType<typeof createData> }) {
                 </TableCell>
                 <TableCell align="right">
                     <Typography variant="subtitle2">APR</Typography>
-                    <Typography>{row.stakingApr.toLocaleString('en-us')}%</Typography>
+                    <Typography>{row.token.stakingApr.toLocaleString('en-us')}%</Typography>
                 </TableCell>
             </TableRow>
             <TableRow>
@@ -116,7 +106,7 @@ function Row(props: { row: ReturnType<typeof createData> }) {
                                             <TableCell>{historyRow.customerId}</TableCell>
                                             <TableCell align="right">{historyRow.amount}</TableCell>
                                             <TableCell align="right">
-                                                {/* {Math.round(historyRow.amount * row.price * 100) / 100} */}
+                                                {/* {Math.round(historyRow.amount * row.token.price * 100) / 100} */}
                                             </TableCell>
                                         </TableRow>
                                     ))}
@@ -132,18 +122,11 @@ function Row(props: { row: ReturnType<typeof createData> }) {
 
 
 interface StakingProps {
-    tokens: Array<Token> | undefined
+    tokens: Array<Token>
 }
 
 export const StakingTable = ({ tokens }: StakingProps) => {
-    var rows: any[] = []
-    // tokens?.forEach((token) => {
-    //     if (token !== undefined) if (token.isActive === true)
-    //         rows.push(createData(
-    //             token.address, token.name, token.type, token.icon,
-    //             token.balance, token.price, token.stakingApr
-    //         ))
-    // })
+    const rows = tokens.map(token => createData(token))
 
     return (
         <Box mx={{ 'md': '7.5%' }}>
@@ -161,7 +144,7 @@ export const StakingTable = ({ tokens }: StakingProps) => {
                 </TableHead> */}
                     <TableBody>
                         {rows.map((row) => (
-                            <Row key={row.name} row={row} />
+                            <Row key={row.token.name} row={row} />
                         ))}
                     </TableBody>
                 </Table>

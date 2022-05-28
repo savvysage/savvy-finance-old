@@ -31,9 +31,9 @@ export const Main = () => {
     const tokens: Token[] = []
     if (tokensAddresses.length !== 0)
         if (
-            tokensAreActive.length === tokensAddresses.length &&
-            tokensData.length === tokensAddresses.length &&
-            tokensPrices.length === tokensAddresses.length
+            tokensAreActive.length === tokensAddresses.length
+            && tokensData.length === tokensAddresses.length
+            && tokensPrices.length === tokensAddresses.length
         ) tokensAddresses.forEach((tokenAddress, index) => {
             tokens[index] = {
                 address: tokenAddress, isActive: tokensAreActive[index],
@@ -42,27 +42,21 @@ export const Main = () => {
                 stakeFee: tokensData[index].stakeFee, unstakeFee: tokensData[index].unstakeFee,
                 stakingApr: tokensData[index].stakingApr, rewardToken: tokensData[index].rewardToken,
                 admin: tokensData[index].admin, icon: tokensData[index].type === 0 ?
-                    [`/icons/${tokensData[index].name?.toLowerCase()}.png`] : [
-                        `/icons/${tokensData[index].name?.split("-")[0].toLowerCase()}.png`,
-                        `/icons/${tokensData[index].name?.split("-")[1].toLowerCase()}.png`
+                    [`/icons/${tokensData[index].name.toLowerCase()}.png`] : [
+                        `/icons/${tokensData[index].name.split("-")[0].toLowerCase()}.png`,
+                        `/icons/${tokensData[index].name.split("-")[1].toLowerCase()}.png`
                     ]
             }
         })
-    console.log(tokens)
 
-    return (
+    if (tokens.length !== 0) return (
+        <Stack spacing={2}>
+            <StakingTable tokens={tokens} />
+        </Stack>
+    )
+    else return (
         <Box sx={{ display: 'flex' }}>
             <CircularProgress />
         </Box>
     )
-    // if (tokens.length !== 0) return (
-    //     <Stack spacing={2}>
-    //         <StakingTable tokens={tokens} />
-    //     </Stack>
-    // )
-    // else return (
-    //     <Box sx={{ display: 'flex' }}>
-    //         <CircularProgress />
-    //     </Box>
-    // )
 }
