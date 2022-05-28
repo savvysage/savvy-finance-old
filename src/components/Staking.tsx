@@ -66,9 +66,9 @@ function Row(props: { row: ReturnType<typeof createData> }) {
                 </TableCell>
                 <TableCell align="right">
                     <Typography variant="subtitle2">Total Staked</Typography>
-                    <Typography>{row.token.balance.toLocaleString('en-us')}</Typography>
+                    <Typography>{row.token.stakingBalance.toLocaleString('en-us')}</Typography>
                     <Typography variant="body2">
-                        {(row.token.price * row.token.balance).toLocaleString('en-us')} USD
+                        {(row.token.price * row.token.stakingBalance).toLocaleString('en-us')} USD
                     </Typography>
                 </TableCell>
                 <TableCell align="right">

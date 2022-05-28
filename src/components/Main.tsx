@@ -10,7 +10,8 @@ export type Token = {
     name: string
     type: number
     price: number
-    balance: number
+    rewardBalance: number
+    stakingBalance: number
     stakeFee: number
     unstakeFee: number
     stakingApr: number
@@ -34,7 +35,8 @@ export const Main = () => {
                 tokens[index] = {
                     address: tokenAddress, isActive: tokensData[index].isActive,
                     name: tokensData[index].name, type: tokensData[index].type,
-                    price: tokensData[index].price, balance: tokensData[index].balance,
+                    price: tokensData[index].price, rewardBalance: tokensData[index].rewardBalance,
+                    stakingBalance: tokensData[index].stakingBalance,
                     stakeFee: tokensData[index].stakeFee, unstakeFee: tokensData[index].unstakeFee,
                     stakingApr: tokensData[index].stakingApr, rewardToken: tokensData[index].rewardToken,
                     admin: tokensData[index].admin, icon: tokensData[index].type === 0 ?

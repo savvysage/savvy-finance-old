@@ -12,7 +12,8 @@ export type TokenData = {
     name: string
     type: number
     price: number
-    balance: number
+    rewardBalance: number
+    stakingBalance: number
     stakeFee: number
     unstakeFee: number
     stakingApr: number
@@ -64,7 +65,8 @@ export const useTokensData = (tokensAddresses: string[]): TokenData[] | [] => {
             const name = result.value["name"]
             const type = parseInt(result.value["_type"])
             const price = parseFloat(formatEther(result.value["price"]))
-            const balance = parseFloat(formatEther(result.value["balance"]))
+            const rewardBalance = parseFloat(formatEther(result.value["rewardBalance"]))
+            const stakingBalance = parseFloat(formatEther(result.value["stakingBalance"]))
             const stakeFee = parseInt(formatEther(result.value["stakeFee"]))
             const unstakeFee = parseInt(formatEther(result.value["unstakeFee"]))
             const stakingApr = parseInt(formatEther(result.value["stakingApr"]))
@@ -72,8 +74,9 @@ export const useTokensData = (tokensAddresses: string[]): TokenData[] | [] => {
             const admin = result.value["admin"]
             tokensData[index] = {
                 isActive: isActive, name: name, type: type, price: price,
-                balance: balance, stakeFee: stakeFee, unstakeFee: unstakeFee,
-                stakingApr: stakingApr, rewardToken: rewardToken, admin: admin
+                rewardBalance: rewardBalance, stakingBalance: stakingBalance,
+                stakeFee: stakeFee, unstakeFee: unstakeFee, stakingApr: stakingApr,
+                rewardToken: rewardToken, admin: admin
             }
         }
         if (result?.error) console.error(tokensAddresses[index], result.error.message)
