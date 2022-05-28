@@ -21,6 +21,11 @@ export type TokenData = {
     admin: string
 }
 
+export type StakingData = {
+    balance: number
+    rewardToken: string
+}
+
 export const useContract = (): Contract => {
     const { chainId } = useEthers()
 
@@ -83,6 +88,30 @@ export const useTokensData = (tokensAddresses: string[]): TokenData[] | [] => {
     })
 
     return tokensData
+}
+
+export const useStakingData = (tokensAddresses: string[], stakerAddress: string)
+    : StakingData[] | [] => {
+    var stakingData: StakingData[] | [] = [];
+
+    const contract = useContract()
+    const calls = tokensAddresses.map(tokenAddress => ({
+        contract: contract,
+        method: 'stakingData',
+        args: [tokenAddress, stakerAddress]
+    })) ?? []
+    const results = useCalls(calls) ?? []
+
+    results.forEach((result, index) => {
+        if (result?.value) {
+            const balance = parseFloat(formatEther(result.value["balance"]))
+            const rewardToken = result.value["rewardToken"]
+            stakingData[index] = { balance: balance, rewardToken: rewardToken }
+        }
+        if (result?.error) console.error(tokensAddresses[index], result.error.message)
+    })
+
+    return stakingData
 }
 
 

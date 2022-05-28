@@ -73,8 +73,10 @@ function Row(props: { row: ReturnType<typeof createData> }) {
                 </TableCell>
                 <TableCell align="right">
                     <Typography variant="subtitle2">Your Stake</Typography>
-                    <Typography>0.0</Typography>
-                    <Typography variant="body2">0 USD</Typography>
+                    <Typography>{row.token.stakingData.balance.toLocaleString('en-us')}</Typography>
+                    <Typography variant="body2">
+                        {(row.token.price * row.token.stakingData.balance).toLocaleString('en-us')} USD
+                    </Typography>
                 </TableCell>
                 <TableCell align="right">
                     <Typography variant="subtitle2">APR</Typography>
@@ -122,7 +124,7 @@ function Row(props: { row: ReturnType<typeof createData> }) {
 
 
 interface StakingProps {
-    tokens: Array<Token>
+    tokens: Token[]
 }
 
 export const StakingTable = ({ tokens }: StakingProps) => {
