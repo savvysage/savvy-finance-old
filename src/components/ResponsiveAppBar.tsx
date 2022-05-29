@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { useEthers } from '@usedapp/core';
+import { shortenAddress, useEthers } from '@usedapp/core';
+import { Chip } from '@mui/material';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -8,14 +9,14 @@ import Typography from '@mui/material/Typography';
 import Menu from '@mui/material/Menu';
 import MenuIcon from '@mui/icons-material/Menu';
 import Container from '@mui/material/Container';
-import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
+import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 
 const pages = ['Staking'];
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+const settings = ['Profile', 'Account', 'Dashboard', 'Disconnect'];
 
 const ResponsiveAppBar = () => {
   const { account, activateBrowserWallet, deactivate } = useEthers()
@@ -130,12 +131,15 @@ const ResponsiveAppBar = () => {
           </Box>
 
           {!isConnected ? (
-            <Button variant="contained" color="secondary" onClick={() => activateBrowserWallet()}>Connect Wallet</Button>
+            <Button variant="contained" color="secondary" onClick={() => activateBrowserWallet()}>
+              Connect Wallet
+            </Button>
           ) : (
             <Box sx={{ flexGrow: 0 }}>
               <Tooltip title="Open settings">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                  <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                  <Chip icon={<AccountBalanceWalletIcon />} label={shortenAddress(account)}
+                    color="secondary" />
                 </IconButton>
               </Tooltip>
               <Menu
@@ -156,10 +160,13 @@ const ResponsiveAppBar = () => {
               >
                 {settings.map((setting) => (
                   <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                    <Typography textAlign="center">{setting}</Typography>
+                    {setting !== "Disconnect" ? (
+                      <Typography textAlign="center">{setting}</Typography>
+                    ) : (
+                      <Typography textAlign="center" onClick={deactivate}>{setting}</Typography>
+                    )}
                   </MenuItem>
                 ))}
-                <Button variant="outlined" color="secondary" onClick={deactivate}>Disconnect Wallet</Button>
               </Menu>
             </Box>
           )}

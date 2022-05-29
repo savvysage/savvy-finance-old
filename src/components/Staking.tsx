@@ -1,28 +1,67 @@
-import * as React from 'react';
-import { Avatar, Badge, Box, Collapse, IconButton, Paper, Stack, styled, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import * as React from 'react'
+import { useEthers, useTokenBalance } from '@usedapp/core'
+import { Avatar, Badge, Box, Button, Collapse, IconButton, InputAdornment, Paper, Stack, styled, Tab, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tabs, TextField, Typography } from '@mui/material'
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp'
 import { Token } from "./Main"
+import { TabContext, TabList, TabPanel } from '@mui/lab'
+import { formatEther } from 'ethers/lib/utils'
+import { constants } from 'ethers'
 
-function createData(
-    token: Token
-) {
-    return {
-        token,
-        history: [
-            {
-                date: '2020-01-05',
-                customerId: '11091700',
-                amount: 3,
-            },
-            {
-                date: '2020-01-02',
-                customerId: 'Anonymous',
-                amount: 1,
-            },
-        ],
-    };
+function createData(token: Token) {
+    return { token };
 }
+
+
+function InnerRow(props: { row: ReturnType<typeof createData> }) {
+    const { row } = props;
+
+    const { account, activateBrowserWallet, deactivate } = useEthers()
+    const isConnected = account !== undefined
+
+    const tokenBalance = parseFloat(formatEther(useTokenBalance(row.token.address, account) ?? 0))
+
+    const [stakingOption, setStakingOption] = React.useState("stake");
+    const handleStakingOptionChange = (event: React.SyntheticEvent, newOption: string) => {
+        setStakingOption(newOption);
+    };
+
+    return (
+        <React.Fragment>
+            <TableRow>
+                <TableCell sx={{ /*border: 1, borderColor: 'grey.500', borderRadius: 1*/ }}>
+                    <Box sx={{ width: '100%', typography: 'body1' }}>
+                        <TabContext value={stakingOption}>
+                            <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                                <TabList onChange={handleStakingOptionChange} aria-label="staking options">
+                                    <Tab label="Stake" value="stake" />
+                                    <Tab label="Unstake" value="unstake" />
+                                </TabList>
+                            </Box>
+                            <TabPanel value={stakingOption}>
+                                {!isConnected ? (
+                                    <Button variant="contained" size="large" color="secondary" onClick={
+                                        () => activateBrowserWallet()
+                                    }>Connect Wallet</Button>
+                                ) : (
+                                    <>
+                                        <Typography variant="body2">Your {row.token.name} Balance: {tokenBalance.toLocaleString('en-us')}</Typography>
+                                        <Typography variant="body2">Your {row.token.name} Staking Balance: {row.token.stakingData.balance.toLocaleString('en-us')}</Typography>
+                                        <TextField id="amount" label="Amount" type="number" margin="normal" InputProps={{
+                                            endAdornment: <InputAdornment position="end"><Button>MAX</Button></InputAdornment>
+                                        }} />
+                                        <br /><Button variant="contained" size="large" color="secondary">{stakingOption}</Button>
+                                    </>
+                                )}
+                            </TabPanel>
+                        </TabContext>
+                    </Box>
+                </TableCell>
+            </TableRow>
+        </React.Fragment>
+    )
+}
+
 
 function Row(props: { row: ReturnType<typeof createData> }) {
     const { row } = props;
@@ -87,31 +126,9 @@ function Row(props: { row: ReturnType<typeof createData> }) {
                 <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
                     <Collapse in={open} timeout="auto" unmountOnExit>
                         <Box sx={{ margin: 1 }}>
-                            <Typography variant="h6" gutterBottom component="div">
-                                History
-                            </Typography>
-                            <Table size="small" aria-label="purchases">
-                                <TableHead>
-                                    <TableRow>
-                                        <TableCell>Date</TableCell>
-                                        <TableCell>Customer</TableCell>
-                                        <TableCell align="right">Amount</TableCell>
-                                        <TableCell align="right">Total price ($)</TableCell>
-                                    </TableRow>
-                                </TableHead>
+                            <Table size="small" aria-label="staking">
                                 <TableBody>
-                                    {row.history.map((historyRow) => (
-                                        <TableRow key={historyRow.date}>
-                                            <TableCell component="th" scope="row">
-                                                {historyRow.date}
-                                            </TableCell>
-                                            <TableCell>{historyRow.customerId}</TableCell>
-                                            <TableCell align="right">{historyRow.amount}</TableCell>
-                                            <TableCell align="right">
-                                                {/* {Math.round(historyRow.amount * row.token.price * 100) / 100} */}
-                                            </TableCell>
-                                        </TableRow>
-                                    ))}
+                                    <InnerRow row={row} />
                                 </TableBody>
                             </Table>
                         </Box>
