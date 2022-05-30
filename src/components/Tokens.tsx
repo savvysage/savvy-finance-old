@@ -71,7 +71,7 @@ function TokenInnerRow(props: { token: Token; tokens: Token[] }) {
     <React.Fragment>
       <TableRow>
         <TableCell width={"50%"}>
-          <Box sx={{ typography: "body1" }}>
+          <Box component={Paper}>
             <TabContext value={stakingOption}>
               <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
                 <TabList
@@ -122,13 +122,7 @@ function TokenInnerRow(props: { token: Token; tokens: Token[] }) {
             </TabContext>
           </Box>
         </TableCell>
-        <TableCell
-          sx={{
-            border: 1,
-            borderColor: "grey.500",
-            borderRadius: 5,
-          }}
-        >
+        <TableCell width={"50%"}>
           <Box>
             <FormControl fullWidth>
               <InputLabel>Reward Token</InputLabel>
@@ -249,7 +243,7 @@ function TokenRow(props: { token: Token; tokens: Token[] }) {
   );
 }
 
-export const TokensTable = (props: { tokens: Token[] | [] }) => {
+export const TokensTable = (props: { tokens: Token[] }) => {
   const { tokens } = props;
   return (
     <Box mx={{ md: "7.5%" }}>
