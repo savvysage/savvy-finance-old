@@ -6,9 +6,13 @@ import {
   Box,
   Button,
   Collapse,
+  FormControl,
   IconButton,
   InputAdornment,
+  InputLabel,
+  MenuItem,
   Paper,
+  Select,
   Stack,
   styled,
   Tab,
@@ -25,10 +29,12 @@ import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import { Token } from "./Main";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 import { formatEther } from "ethers/lib/utils";
+import { ConnectWallet } from "./ConnectWallet";
+import { constants } from "ethers";
 
-function InnerRow(props: { token: Token }) {
-  const { token } = props;
-  const { account, activateBrowserWallet } = useEthers();
+function TokenInnerRow(props: { token: Token; tokens: Token[] }) {
+  const { token, tokens } = props;
+  const { account } = useEthers();
   const isConnected = account !== undefined;
   token.stakerData.walletBalance = parseFloat(
     formatEther(useTokenBalance(token.address, account) ?? 0)
@@ -56,18 +62,16 @@ function InnerRow(props: { token: Token }) {
     if (stakingOption === "unstake")
       setStakingAmount(token.stakerData.stakingBalance.toString());
   };
+  const handleStaking = (event: React.MouseEvent<HTMLButtonElement>) => {
+    if (stakingOption === "stake") console.log(stakingOption);
+    if (stakingOption === "unstake") console.log(stakingOption);
+  };
 
   return (
     <React.Fragment>
       <TableRow>
-        <TableCell
-          sx={
-            {
-              /*border: 1, borderColor: 'grey.500', borderRadius: 1*/
-            }
-          }
-        >
-          <Box sx={{ width: "100%", typography: "body1" }}>
+        <TableCell width={"50%"}>
+          <Box sx={{ typography: "body1" }}>
             <TabContext value={stakingOption}>
               <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
                 <TabList
@@ -79,49 +83,71 @@ function InnerRow(props: { token: Token }) {
                 </TabList>
               </Box>
               <TabPanel value={stakingOption}>
+                <Typography variant="body2">
+                  Your {token.name} Wallet Balance:{" "}
+                  {token.stakerData.walletBalance.toLocaleString("en-us")}
+                </Typography>
+                <Typography variant="body2">
+                  Your {token.name} Staking Balance:{" "}
+                  {token.stakerData.stakingBalance.toLocaleString("en-us")}
+                </Typography>
+                <TextField
+                  label="Amount"
+                  type="number"
+                  margin="normal"
+                  value={stakingAmount}
+                  onChange={handleStakingAmountChange}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <Button onClick={handleStakingAmountMax}>MAX</Button>
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+                <br />
                 {!isConnected ? (
+                  <ConnectWallet />
+                ) : (
                   <Button
                     variant="contained"
                     size="large"
                     color="secondary"
-                    onClick={() => activateBrowserWallet()}
+                    onClick={handleStaking}
                   >
-                    Connect Wallet
+                    {stakingOption}
                   </Button>
-                ) : (
-                  <>
-                    <Typography variant="body2">
-                      Your {token.name} Wallet Balance:{" "}
-                      {token.stakerData.walletBalance.toLocaleString("en-us")}
-                    </Typography>
-                    <Typography variant="body2">
-                      Your {token.name} Staking Balance:{" "}
-                      {token.stakerData.stakingBalance.toLocaleString("en-us")}
-                    </Typography>
-                    <TextField
-                      label="Amount"
-                      type="number"
-                      margin="normal"
-                      value={stakingAmount}
-                      onChange={handleStakingAmountChange}
-                      InputProps={{
-                        endAdornment: (
-                          <InputAdornment position="end">
-                            <Button onClick={handleStakingAmountMax}>
-                              MAX
-                            </Button>
-                          </InputAdornment>
-                        ),
-                      }}
-                    />
-                    <br />
-                    <Button variant="contained" size="large" color="secondary">
-                      {stakingOption}
-                    </Button>
-                  </>
                 )}
               </TabPanel>
             </TabContext>
+          </Box>
+        </TableCell>
+        <TableCell
+          sx={{
+            border: 1,
+            borderColor: "grey.500",
+            borderRadius: 5,
+          }}
+        >
+          <Box>
+            <FormControl fullWidth>
+              <InputLabel>Reward Token</InputLabel>
+              <Select
+                label="Reward Token"
+                defaultValue={
+                  token.stakerData.stakingRewardToken !== constants.AddressZero
+                    ? token.stakerData.stakingRewardToken
+                    : token.rewardToken
+                }
+                // onChange={handleChange}
+              >
+                {tokens.map((token) => (
+                  <MenuItem key={token.name} value={token.address}>
+                    {token.name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
           </Box>
         </TableCell>
       </TableRow>
@@ -129,8 +155,8 @@ function InnerRow(props: { token: Token }) {
   );
 }
 
-function Row(props: { token: Token }) {
-  const { token } = props;
+function TokenRow(props: { token: Token; tokens: Token[] }) {
+  const { token, tokens } = props;
   const [open, setOpen] = React.useState(false);
   const SmallAvatar = styled(Avatar)(({ theme }) => ({
     width: 22,
@@ -212,7 +238,7 @@ function Row(props: { token: Token }) {
             <Box sx={{ margin: 1 }}>
               <Table size="small" aria-label="staking">
                 <TableBody>
-                  <InnerRow token={token} />
+                  <TokenInnerRow token={token} tokens={tokens} />
                 </TableBody>
               </Table>
             </Box>
@@ -223,18 +249,15 @@ function Row(props: { token: Token }) {
   );
 }
 
-interface TokensProps {
-  tokens: Token[];
-}
-
-export const TokensTable = ({ tokens }: TokensProps) => {
+export const TokensTable = (props: { tokens: Token[] | [] }) => {
+  const { tokens } = props;
   return (
     <Box mx={{ md: "7.5%" }}>
       <TableContainer component={Paper}>
         <Table aria-label="tokens table">
           <TableBody>
             {tokens.map((token) => (
-              <Row key={token.name} token={token} />
+              <TokenRow key={token.name} token={token} tokens={tokens} />
             ))}
           </TableBody>
         </Table>

@@ -5,6 +5,7 @@ import { CircularProgress, Stack } from "@mui/material";
 import { TokensTable } from "./Tokens";
 import * as svfFarm from "../hooks/savvy_finance_farm";
 import { getContractAddress } from "../common";
+import tokensJSON from "../tokens.json";
 
 export type Token = {
   address: string;
@@ -28,17 +29,19 @@ export const Main = () => {
   const tokensAddresses: string[] = svfFarm.useTokens();
   const tokensData: svfFarm.TokenData[] =
     svfFarm.useTokensData(tokensAddresses);
-  // const tokensMainnetAddresses = tokensData.map(tokenData => getContractAddress(
-  //     tokenData?.name?.toLowerCase() + "_token", "bsc-main"
-  // ))
-  // const tokensPrices: number[] = svfFarm.useTokensPrices(tokensMainnetAddresses)
+  // const tokensMainnetAddresses = tokensData.map((tokenData) =>
+  //   getContractAddress(tokenData?.name?.toLowerCase() + "_token", "bsc-main")
+  // );
+  // const tokensPrices: number[] = svfFarm.useTokensPrices(
+  //   tokensMainnetAddresses
+  // );
   const tokensStakerData: svfFarm.TokenStakerData[] =
     svfFarm.useTokensStakerData(
       tokensAddresses,
       account ?? constants.AddressZero
     );
 
-  const tokens: Token[] = [];
+  const tokens: Token[] = tokensJSON;
   if (tokensAddresses.length !== 0)
     if (
       tokensData.length === tokensAddresses.length &&
@@ -73,16 +76,9 @@ export const Main = () => {
         };
       });
 
-  if (tokens.length !== 0)
-    return (
-      <Stack spacing={2}>
-        <TokensTable tokens={tokens} />
-      </Stack>
-    );
-  else
-    return (
-      <Box sx={{ display: "flex" }}>
-        <CircularProgress />
-      </Box>
-    );
+  return (
+    <Stack spacing={2}>
+      <TokensTable tokens={tokens} />
+    </Stack>
+  );
 };
