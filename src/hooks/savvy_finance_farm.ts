@@ -21,9 +21,10 @@ export type TokenData = {
   admin: string;
 };
 
-export type StakingData = {
-  balance: number;
-  rewardToken: string;
+export type TokenStakerData = {
+  walletBalance: number;
+  stakingBalance: number;
+  stakingRewardToken: string;
 };
 
 export const useContract = (): Contract => {
@@ -105,11 +106,11 @@ export const useTokensData = (tokensAddresses: string[]): TokenData[] | [] => {
   return tokensData;
 };
 
-export const useStakingData = (
+export const useTokensStakerData = (
   tokensAddresses: string[],
   stakerAddress: string
-): StakingData[] | [] => {
-  var stakingData: StakingData[] | [] = [];
+): TokenStakerData[] | [] => {
+  var tokensStakerData: TokenStakerData[] | [] = [];
 
   const contract = useContract();
   const calls =
@@ -122,15 +123,20 @@ export const useStakingData = (
 
   results.forEach((result, index) => {
     if (result?.value) {
-      const balance = parseFloat(formatEther(result.value["balance"]));
-      const rewardToken = result.value["rewardToken"];
-      stakingData[index] = { balance: balance, rewardToken: rewardToken };
+      const walletBalance = 0;
+      const stakingBalance = parseFloat(formatEther(result.value["balance"]));
+      const stakingRewardToken = result.value["rewardToken"];
+      tokensStakerData[index] = {
+        walletBalance: walletBalance,
+        stakingBalance: stakingBalance,
+        stakingRewardToken: stakingRewardToken,
+      };
     }
     if (result?.error)
       console.error(tokensAddresses[index], result.error.message);
   });
 
-  return stakingData;
+  return tokensStakerData;
 };
 
 export const useTokensPrices = (tokensAddresses: string[]): number[] => {

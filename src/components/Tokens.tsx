@@ -26,18 +26,12 @@ import { Token } from "./Main";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 import { formatEther } from "ethers/lib/utils";
 
-function createData(token: Token) {
-  return { token };
-}
-
-function InnerRow(props: { row: ReturnType<typeof createData> }) {
-  const { row } = props;
-
+function InnerRow(props: { token: Token }) {
+  const { token } = props;
   const { account, activateBrowserWallet } = useEthers();
   const isConnected = account !== undefined;
-
-  const tokenBalance = parseFloat(
-    formatEther(useTokenBalance(row.token.address, account) ?? 0)
+  token.stakerData.walletBalance = parseFloat(
+    formatEther(useTokenBalance(token.address, account) ?? 0)
   );
 
   const [stakingOption, setStakingOption] = React.useState("stake");
@@ -54,12 +48,13 @@ function InnerRow(props: { row: ReturnType<typeof createData> }) {
   ) => {
     setStakingAmount(event.target.value);
   };
-  const handleStakingMaxAmountClick = (
+  const handleStakingAmountMax = (
     event: React.MouseEvent<HTMLButtonElement>
   ) => {
-    if (stakingOption === "stake") setStakingAmount(tokenBalance.toString());
+    if (stakingOption === "stake")
+      setStakingAmount(token.stakerData.walletBalance.toString());
     if (stakingOption === "unstake")
-      setStakingAmount(row.token.stakingData.balance.toString());
+      setStakingAmount(token.stakerData.stakingBalance.toString());
   };
 
   return (
@@ -96,12 +91,12 @@ function InnerRow(props: { row: ReturnType<typeof createData> }) {
                 ) : (
                   <>
                     <Typography variant="body2">
-                      Your {row.token.name} Balance:{" "}
-                      {tokenBalance.toLocaleString("en-us")}
+                      Your {token.name} Wallet Balance:{" "}
+                      {token.stakerData.walletBalance.toLocaleString("en-us")}
                     </Typography>
                     <Typography variant="body2">
-                      Your {row.token.name} Staking Balance:{" "}
-                      {row.token.stakingData.balance.toLocaleString("en-us")}
+                      Your {token.name} Staking Balance:{" "}
+                      {token.stakerData.stakingBalance.toLocaleString("en-us")}
                     </Typography>
                     <TextField
                       label="Amount"
@@ -112,7 +107,7 @@ function InnerRow(props: { row: ReturnType<typeof createData> }) {
                       InputProps={{
                         endAdornment: (
                           <InputAdornment position="end">
-                            <Button onClick={handleStakingMaxAmountClick}>
+                            <Button onClick={handleStakingAmountMax}>
                               MAX
                             </Button>
                           </InputAdornment>
@@ -134,8 +129,8 @@ function InnerRow(props: { row: ReturnType<typeof createData> }) {
   );
 }
 
-function Row(props: { row: ReturnType<typeof createData> }) {
-  const { row } = props;
+function Row(props: { token: Token }) {
+  const { token } = props;
   const [open, setOpen] = React.useState(false);
   const SmallAvatar = styled(Avatar)(({ theme }) => ({
     width: 22,
@@ -163,8 +158,8 @@ function Row(props: { row: ReturnType<typeof createData> }) {
         </TableCell>
         <TableCell component="th" scope="row">
           <Stack direction="row" alignItems="center" spacing={1}>
-            {row.token.type === 0 ? (
-              <Avatar alt={row.token.name + " Icon"} src={row.token.icon[0]} />
+            {token.type === 0 ? (
+              <Avatar alt={token.name + " Icon"} src={token.icon[0]} />
             ) : (
               <Badge
                 overlap="circular"
@@ -173,20 +168,14 @@ function Row(props: { row: ReturnType<typeof createData> }) {
                   horizontal: "right",
                 }}
                 badgeContent={
-                  <SmallAvatar
-                    alt={row.token.name + " Icon"}
-                    src={row.token.icon[1]}
-                  />
+                  <SmallAvatar alt={token.name + " Icon"} src={token.icon[1]} />
                 }
               >
-                <Avatar
-                  alt={row.token.name + " Icon"}
-                  src={row.token.icon[0]}
-                />
+                <Avatar alt={token.name + " Icon"} src={token.icon[0]} />
               </Badge>
             )}
             <Box>
-              <Typography variant="h6">Stake {row.token.name}</Typography>
+              <Typography variant="h6">Stake {token.name}</Typography>
               <Typography variant="caption">Choose Reward Token</Typography>
             </Box>
           </Stack>
@@ -194,22 +183,19 @@ function Row(props: { row: ReturnType<typeof createData> }) {
         <TableCell align="right">
           <Typography variant="subtitle2">Total Staked</Typography>
           <Typography>
-            {row.token.stakingBalance.toLocaleString("en-us")}
+            {token.stakingBalance.toLocaleString("en-us")}
           </Typography>
           <Typography variant="body2">
-            {(row.token.price * row.token.stakingBalance).toLocaleString(
-              "en-us"
-            )}{" "}
-            USD
+            {(token.price * token.stakingBalance).toLocaleString("en-us")} USD
           </Typography>
         </TableCell>
         <TableCell align="right">
           <Typography variant="subtitle2">Your Stake</Typography>
           <Typography>
-            {row.token.stakingData.balance.toLocaleString("en-us")}
+            {token.stakerData.stakingBalance.toLocaleString("en-us")}
           </Typography>
           <Typography variant="body2">
-            {(row.token.price * row.token.stakingData.balance).toLocaleString(
+            {(token.price * token.stakerData.stakingBalance).toLocaleString(
               "en-us"
             )}{" "}
             USD
@@ -217,9 +203,7 @@ function Row(props: { row: ReturnType<typeof createData> }) {
         </TableCell>
         <TableCell align="right">
           <Typography variant="subtitle2">APR</Typography>
-          <Typography>
-            {row.token.stakingApr.toLocaleString("en-us")}%
-          </Typography>
+          <Typography>{token.stakingApr.toLocaleString("en-us")}%</Typography>
         </TableCell>
       </TableRow>
       <TableRow>
@@ -228,7 +212,7 @@ function Row(props: { row: ReturnType<typeof createData> }) {
             <Box sx={{ margin: 1 }}>
               <Table size="small" aria-label="staking">
                 <TableBody>
-                  <InnerRow row={row} />
+                  <InnerRow token={token} />
                 </TableBody>
               </Table>
             </Box>
@@ -239,30 +223,18 @@ function Row(props: { row: ReturnType<typeof createData> }) {
   );
 }
 
-interface StakingProps {
+interface TokensProps {
   tokens: Token[];
 }
 
-export const StakingTable = ({ tokens }: StakingProps) => {
-  const rows = tokens.map((token) => createData(token));
-
+export const TokensTable = ({ tokens }: TokensProps) => {
   return (
     <Box mx={{ md: "7.5%" }}>
       <TableContainer component={Paper}>
-        <Table aria-label="collapsible table">
-          {/* <TableHead>
-                    <TableRow>
-                        <TableCell />
-                        <TableCell>Dessert (100g serving)</TableCell>
-                        <TableCell align="right">Calories</TableCell>
-                        <TableCell align="right">Fat&nbsp;(g)</TableCell>
-                        <TableCell align="right">Carbs&nbsp;(g)</TableCell>
-                        <TableCell align="right">Protein&nbsp;(g)</TableCell>
-                    </TableRow>
-                </TableHead> */}
+        <Table aria-label="tokens table">
           <TableBody>
-            {rows.map((row) => (
-              <Row key={row.token.name} row={row} />
+            {tokens.map((token) => (
+              <Row key={token.name} token={token} />
             ))}
           </TableBody>
         </Table>

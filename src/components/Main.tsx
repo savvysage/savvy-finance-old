@@ -2,7 +2,7 @@ import { useEthers } from "@usedapp/core";
 import { constants } from "ethers";
 import { Box } from "@mui/system";
 import { CircularProgress, Stack } from "@mui/material";
-import { StakingTable } from "./Staking";
+import { TokensTable } from "./Tokens";
 import * as svfFarm from "../hooks/savvy_finance_farm";
 import { getContractAddress } from "../common";
 
@@ -20,7 +20,7 @@ export type Token = {
   rewardToken: string;
   admin: string;
   icon: string[];
-  stakingData: svfFarm.StakingData;
+  stakerData: svfFarm.TokenStakerData;
 };
 
 export const Main = () => {
@@ -32,16 +32,17 @@ export const Main = () => {
   //     tokenData?.name?.toLowerCase() + "_token", "bsc-main"
   // ))
   // const tokensPrices: number[] = svfFarm.useTokensPrices(tokensMainnetAddresses)
-  const stakingData: svfFarm.StakingData[] = svfFarm.useStakingData(
-    tokensAddresses,
-    account ?? constants.AddressZero
-  );
+  const tokensStakerData: svfFarm.TokenStakerData[] =
+    svfFarm.useTokensStakerData(
+      tokensAddresses,
+      account ?? constants.AddressZero
+    );
 
   const tokens: Token[] = [];
   if (tokensAddresses.length !== 0)
     if (
       tokensData.length === tokensAddresses.length &&
-      stakingData.length === tokensAddresses.length
+      tokensStakerData.length === tokensData.length
     )
       tokensAddresses.forEach((tokenAddress, index) => {
         tokens[index] = {
@@ -68,14 +69,14 @@ export const Main = () => {
                     .split("-")[1]
                     .toLowerCase()}.png`,
                 ],
-          stakingData: stakingData[index],
+          stakerData: tokensStakerData[index],
         };
       });
 
   if (tokens.length !== 0)
     return (
       <Stack spacing={2}>
-        <StakingTable tokens={tokens} />
+        <TokensTable tokens={tokens} />
       </Stack>
     );
   else
