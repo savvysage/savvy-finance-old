@@ -116,7 +116,7 @@ export const useTokensStakerData = (
   const calls =
     tokensAddresses.map((tokenAddress) => ({
       contract: contract,
-      method: "stakingData",
+      method: "tokensStakersData",
       args: [tokenAddress, stakerAddress],
     })) ?? [];
   const results = useCalls(calls) ?? [];
