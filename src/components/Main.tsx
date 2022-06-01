@@ -63,12 +63,16 @@ export const Main = () => {
           admin: tokensData[index].admin,
           icon:
             tokensData[index].type === 0
-              ? [`/icons/${tokensData[index].name.toLowerCase()}.png`]
+              ? [
+                  `/savvy-finance/icons/${tokensData[
+                    index
+                  ].name.toLowerCase()}.png`,
+                ]
               : [
-                  `/icons/${tokensData[index].name
+                  `/savvy-finance/icons/${tokensData[index].name
                     .split("-")[0]
                     .toLowerCase()}.png`,
-                  `/icons/${tokensData[index].name
+                  `/savvy-finance/icons/${tokensData[index].name
                     .split("-")[1]
                     .toLowerCase()}.png`,
                 ],
