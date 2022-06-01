@@ -187,11 +187,21 @@ function TokenRow(props: { token: Token; tokens: Token[] }) {
             )}
             <Box>
               <Typography variant="h6">Stake {token.name}</Typography>
-              <Typography variant="caption">
+              <Typography
+                variant="caption"
+                display={{ xs: "none", sm: "block" }}
+              >
                 Earn {token.name} & more.
               </Typography>
             </Box>
           </Stack>
+          <Typography
+            variant="caption"
+            align="center"
+            display={{ xs: "block", sm: "none" }}
+          >
+            Earn {token.name} & more.
+          </Typography>
         </TableCell>
         <TableCell align="right">
           <Typography variant="subtitle2">Total Staked</Typography>
