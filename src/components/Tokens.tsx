@@ -187,7 +187,9 @@ function TokenRow(props: { token: Token; tokens: Token[] }) {
             )}
             <Box>
               <Typography variant="h6">Stake {token.name}</Typography>
-              <Typography variant="caption">Choose Reward Token</Typography>
+              <Typography variant="caption">
+                Earn {token.name} & more.
+              </Typography>
             </Box>
           </Stack>
         </TableCell>
