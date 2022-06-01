@@ -14,9 +14,12 @@ import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
+import helperConfig from "../helper-config.json";
+import { ConnectWallet } from "./ConnectWallet";
 
+const appName = helperConfig.appName;
 const pages = ["Staking"];
-const settings = ["Profile", "Account", "Dashboard", "Disconnect"];
+const settings = ["Disconnect"];
 
 const ResponsiveAppBar = () => {
   const { account, activateBrowserWallet, deactivate } = useEthers();
@@ -66,7 +69,7 @@ const ResponsiveAppBar = () => {
               textDecoration: "none",
             }}
           >
-            Savvy Finance
+            {appName}
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
@@ -124,7 +127,7 @@ const ResponsiveAppBar = () => {
               textDecoration: "none",
             }}
           >
-            Savvy Finance
+            {appName}
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             {pages.map((page) => (
@@ -139,20 +142,18 @@ const ResponsiveAppBar = () => {
           </Box>
 
           {!isConnected ? (
-            <Button
-              variant="contained"
-              color="secondary"
-              onClick={() => activateBrowserWallet()}
-            >
-              Connect Wallet
-            </Button>
+            <ConnectWallet size="small" />
           ) : (
             <Box sx={{ flexGrow: 0 }}>
               <Tooltip title="Open settings">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                   <Chip
                     icon={<AccountBalanceWalletIcon />}
-                    label={shortenAddress(account)}
+                    label={
+                      shortenAddress(account) +
+                      " " +
+                      String.fromCharCode(0x25bc)
+                    }
                     color="secondary"
                   />
                 </IconButton>

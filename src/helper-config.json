@@ -1,4 +1,6 @@
 {
+  "appName": "Savvy Finance",
+  "appShortName": "SVF",
   "networks": {
     "4": "rinkeby",
     "97": "bsc-test",

@@ -107,7 +107,7 @@ function TokenInnerRow(props: { token: Token; tokens: Token[] }) {
                 />
                 <br />
                 {!isConnected ? (
-                  <ConnectWallet />
+                  <ConnectWallet size="medium" />
                 ) : (
                   <Button
                     variant="contained"
