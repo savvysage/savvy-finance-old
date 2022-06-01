@@ -7,7 +7,7 @@ export const Header = () => {
       sx={{
         background:
           "linear-gradient(139.73deg, rgb(229, 253, 255) 0%, rgb(243, 239, 255) 100%)",
-        my: "5%",
+        my: { xs: "5%", md: "3.75%", xl: "2.5%" },
         px: "7.5%",
         py: "2.5%",
         borderRadius: 10,

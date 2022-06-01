@@ -109,7 +109,7 @@ const ResponsiveAppBar = () => {
             sx={{ display: { xs: "flex", md: "none" }, mr: 1 }}
           />
           <Typography
-            variant="h5"
+            variant="h6"
             noWrap
             component="a"
             href=""
@@ -119,7 +119,7 @@ const ResponsiveAppBar = () => {
               flexGrow: 1,
               fontFamily: "monospace",
               fontWeight: 700,
-              letterSpacing: ".3rem",
+              letterSpacing: { xs: ".15rem", sm: ".3rem" },
               color: "inherit",
               textDecoration: "none",
             }}
