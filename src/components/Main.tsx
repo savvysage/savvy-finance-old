@@ -64,17 +64,18 @@ export const Main = () => {
           icon:
             tokensData[index].type === 0
               ? [
-                  `/savvy-finance/icons/${tokensData[
-                    index
-                  ].name.toLowerCase()}.png`,
+                  process.env.PUBLIC_URL +
+                    `/icons/${tokensData[index].name.toLowerCase()}.png`,
                 ]
               : [
-                  `/savvy-finance/icons/${tokensData[index].name
-                    .split("-")[0]
-                    .toLowerCase()}.png`,
-                  `/savvy-finance/icons/${tokensData[index].name
-                    .split("-")[1]
-                    .toLowerCase()}.png`,
+                  process.env.PUBLIC_URL +
+                    `/icons/${tokensData[index].name
+                      .split("-")[0]
+                      .toLowerCase()}.png`,
+                  process.env.PUBLIC_URL +
+                    `/icons/${tokensData[index].name
+                      .split("-")[1]
+                      .toLowerCase()}.png`,
                 ],
           stakerData: tokensStakerData[index],
         };

@@ -167,15 +167,6 @@ function TokenRow(props: { token: Token; tokens: Token[] }) {
         }}
         onClick={() => setOpen(!open)}
       >
-        <TableCell>
-          <IconButton
-            aria-label="expand row"
-            size="small"
-            onClick={() => setOpen(!open)}
-          >
-            {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-          </IconButton>
-        </TableCell>
         <TableCell component="th" scope="row">
           <Stack direction="row" alignItems="center" spacing={1}>
             {token.type === 0 ? (
@@ -224,6 +215,15 @@ function TokenRow(props: { token: Token; tokens: Token[] }) {
         <TableCell align="right">
           <Typography variant="subtitle2">APR</Typography>
           <Typography>{token.stakingApr.toLocaleString("en-us")}%</Typography>
+        </TableCell>
+        <TableCell>
+          <IconButton
+            aria-label="expand row"
+            size="small"
+            onClick={() => setOpen(!open)}
+          >
+            {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+          </IconButton>
         </TableCell>
       </TableRow>
       <TableRow>
