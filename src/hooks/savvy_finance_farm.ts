@@ -7,6 +7,8 @@ import axios from "axios";
 import contractAddresses from "../chain-info/deployments/map.json";
 import SavvyFinanceFarm from "../chain-info/contracts/SavvyFinanceFarm.json";
 
+// axios.defaults.headers.common["Access-Control-Allow-Origin"] = "*";
+
 export type TokenData = {
   isActive: boolean;
   name: string;
