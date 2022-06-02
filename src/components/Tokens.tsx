@@ -1,11 +1,14 @@
 import * as React from "react";
 import { useEthers, useTokenBalance } from "@usedapp/core";
+import { constants } from "ethers";
+import { formatEther } from "ethers/lib/utils";
 import {
   Avatar,
   Badge,
   Box,
   Button,
   Collapse,
+  Divider,
   FormControl,
   IconButton,
   InputAdornment,
@@ -24,13 +27,36 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import { TabContext, TabList, TabPanel } from "@mui/lab";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import { Token } from "./Main";
-import { TabContext, TabList, TabPanel } from "@mui/lab";
-import { formatEther } from "ethers/lib/utils";
 import { ConnectWallet } from "./ConnectWallet";
-import { constants } from "ethers";
+import { width } from "@mui/system";
+
+function StakerStakingInfo(props: { token: Token; tokens: Token[] }) {
+  const { token, tokens } = props;
+  return (
+    <FormControl fullWidth>
+      <InputLabel>Reward Token</InputLabel>
+      <Select
+        label="Reward Token"
+        defaultValue={
+          token.stakerData.stakingRewardToken !== constants.AddressZero
+            ? token.stakerData.stakingRewardToken
+            : token.rewardToken
+        }
+        // onChange={handleChange}
+      >
+        {tokens.map((token) => (
+          <MenuItem key={token.name} value={token.address}>
+            {token.name}
+          </MenuItem>
+        ))}
+      </Select>
+    </FormControl>
+  );
+}
 
 function TokenInnerRow(props: { token: Token; tokens: Token[] }) {
   const { token, tokens } = props;
@@ -70,7 +96,7 @@ function TokenInnerRow(props: { token: Token; tokens: Token[] }) {
   return (
     <React.Fragment>
       <TableRow>
-        <TableCell width={"50%"}>
+        <TableCell sx={{ width: { sm: "50%" } }}>
           <Box component={Paper}>
             <TabContext value={stakingOption}>
               <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
@@ -84,12 +110,23 @@ function TokenInnerRow(props: { token: Token; tokens: Token[] }) {
               </Box>
               <TabPanel value={stakingOption}>
                 <Typography variant="body2">
-                  Your {token.name} Wallet Balance:{" "}
-                  {token.stakerData.walletBalance.toLocaleString("en-us")}
+                  Your Wallet Balance:{" "}
+                  {token.stakerData.walletBalance.toLocaleString("en-us")}{" "}
+                  {token.name}
                 </Typography>
                 <Typography variant="body2">
-                  Your {token.name} Staking Balance:{" "}
-                  {token.stakerData.stakingBalance.toLocaleString("en-us")}
+                  Your Staking Balance:{" "}
+                  {token.stakerData.stakingBalance.toLocaleString("en-us")}{" "}
+                  {token.name}
+                </Typography>
+                <br />
+                <Divider />
+                <br />
+                <Typography variant="body2">
+                  Stake Fee: {token.stakeFee.toLocaleString("en-us")}%
+                </Typography>
+                <Typography variant="body2">
+                  Unstake Fee: {token.unstakeFee.toLocaleString("en-us")}%
                 </Typography>
                 <TextField
                   label="Amount"
@@ -107,7 +144,7 @@ function TokenInnerRow(props: { token: Token; tokens: Token[] }) {
                 />
                 <br />
                 {!isConnected ? (
-                  <ConnectWallet size="medium" />
+                  <ConnectWallet />
                 ) : (
                   <Button
                     variant="contained"
@@ -121,27 +158,13 @@ function TokenInnerRow(props: { token: Token; tokens: Token[] }) {
               </TabPanel>
             </TabContext>
           </Box>
+          <Box my={5} display={{ xs: "block", sm: "none" }}>
+            <StakerStakingInfo token={token} tokens={tokens} />
+          </Box>
         </TableCell>
-        <TableCell width={"50%"}>
-          <Box>
-            <FormControl fullWidth>
-              <InputLabel>Reward Token</InputLabel>
-              <Select
-                label="Reward Token"
-                defaultValue={
-                  token.stakerData.stakingRewardToken !== constants.AddressZero
-                    ? token.stakerData.stakingRewardToken
-                    : token.rewardToken
-                }
-                // onChange={handleChange}
-              >
-                {tokens.map((token) => (
-                  <MenuItem key={token.name} value={token.address}>
-                    {token.name}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
+        <TableCell sx={{ width: { sm: "50%" } }}>
+          <Box display={{ xs: "none", sm: "block" }}>
+            <StakerStakingInfo token={token} tokens={tokens} />
           </Box>
         </TableCell>
       </TableRow>
@@ -206,7 +229,7 @@ function TokenRow(props: { token: Token; tokens: Token[] }) {
         <TableCell align="right">
           <Typography variant="subtitle2">Total Staked</Typography>
           <Typography>
-            {token.stakingBalance.toLocaleString("en-us")}
+            {token.stakingBalance.toLocaleString("en-us")} {token.name}
           </Typography>
           <Typography variant="body2">
             {(token.price * token.stakingBalance).toLocaleString("en-us")} USD
@@ -215,7 +238,8 @@ function TokenRow(props: { token: Token; tokens: Token[] }) {
         <TableCell align="right">
           <Typography variant="subtitle2">Your Stake</Typography>
           <Typography>
-            {token.stakerData.stakingBalance.toLocaleString("en-us")}
+            {token.stakerData.stakingBalance.toLocaleString("en-us")}{" "}
+            {token.name}
           </Typography>
           <Typography variant="body2">
             {(token.price * token.stakerData.stakingBalance).toLocaleString(
