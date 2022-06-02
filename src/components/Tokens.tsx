@@ -228,25 +228,27 @@ function TokenRow(props: { token: Token; tokens: Token[] }) {
         </TableCell>
         <TableCell align="right">
           <Typography variant="subtitle2">Total Staked</Typography>
-          <Typography>
+          <Typography noWrap>
             {token.stakingBalance.toLocaleString("en-us")} {token.name}
           </Typography>
-          <Typography variant="body2">
+          <Typography variant="body2" noWrap>
             {(token.price * token.stakingBalance).toLocaleString("en-us")} USD
           </Typography>
         </TableCell>
         <TableCell align="right">
-          <Typography variant="subtitle2">Your Stake</Typography>
-          <Typography>
-            {token.stakerData.stakingBalance.toLocaleString("en-us")}{" "}
-            {token.name}
-          </Typography>
-          <Typography variant="body2">
-            {(token.price * token.stakerData.stakingBalance).toLocaleString(
-              "en-us"
-            )}{" "}
-            USD
-          </Typography>
+          <Box display={{ xs: "none", sm: "block" }}>
+            <Typography variant="subtitle2">You Staked</Typography>
+            <Typography noWrap>
+              {token.stakerData.stakingBalance.toLocaleString("en-us")}{" "}
+              {token.name}
+            </Typography>
+            <Typography variant="body2" noWrap>
+              {(token.price * token.stakerData.stakingBalance).toLocaleString(
+                "en-us"
+              )}{" "}
+              USD
+            </Typography>
+          </Box>
         </TableCell>
         <TableCell align="right">
           <Typography variant="subtitle2">APR</Typography>
