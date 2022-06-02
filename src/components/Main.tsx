@@ -1,11 +1,10 @@
 import { useEthers } from "@usedapp/core";
 import { constants } from "ethers";
-import { Box } from "@mui/system";
-import { CircularProgress, Stack } from "@mui/material";
+import { Stack } from "@mui/material";
+import { TokensTable } from "./TokensTable";
 import * as svfFarm from "../hooks/savvy_finance_farm";
 import { getContractAddress } from "../common";
 import tokensJSON from "../tokens.json";
-import { TokensTable } from "./TokensTable";
 
 export type Token = {
   address: string;
