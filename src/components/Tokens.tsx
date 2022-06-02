@@ -23,6 +23,7 @@ import {
   TableBody,
   TableCell,
   TableContainer,
+  TablePagination,
   TableRow,
   TextField,
   Typography,
@@ -58,7 +59,7 @@ function StakerStakingInfo(props: { token: Token; tokens: Token[] }) {
   );
 }
 
-function TokenInnerRow(props: { token: Token; tokens: Token[] }) {
+function StakingTable(props: { token: Token; tokens: Token[] }) {
   const { token, tokens } = props;
   const { account } = useEthers();
   const isConnected = account !== undefined;
@@ -94,81 +95,87 @@ function TokenInnerRow(props: { token: Token; tokens: Token[] }) {
   };
 
   return (
-    <React.Fragment>
-      <TableRow>
-        <TableCell sx={{ width: { sm: "50%" } }}>
-          <Box component={Paper}>
-            <TabContext value={stakingOption}>
-              <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-                <TabList
-                  onChange={handleStakingOptionChange}
-                  aria-label="staking options"
-                >
-                  <Tab label="Stake" value="stake" />
-                  <Tab label="Unstake" value="unstake" />
-                </TabList>
+    <Box sx={{ margin: 1 }}>
+      <Table size="small" aria-label="staking">
+        <TableBody>
+          <TableRow>
+            <TableCell sx={{ width: { sm: "50%" } }}>
+              <Box component={Paper}>
+                <TabContext value={stakingOption}>
+                  <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+                    <TabList
+                      onChange={handleStakingOptionChange}
+                      aria-label="staking options"
+                    >
+                      <Tab label="Stake" value="stake" />
+                      <Tab label="Unstake" value="unstake" />
+                    </TabList>
+                  </Box>
+                  <TabPanel value={stakingOption}>
+                    <Typography variant="body2">
+                      Your Wallet Balance:{" "}
+                      {token.stakerData.walletBalance.toLocaleString("en-us")}{" "}
+                      {token.name}
+                    </Typography>
+                    <Typography variant="body2">
+                      Your Staking Balance:{" "}
+                      {token.stakerData.stakingBalance.toLocaleString("en-us")}{" "}
+                      {token.name}
+                    </Typography>
+                    <br />
+                    <Divider />
+                    <br />
+                    <Typography variant="body2">
+                      Stake Fee: {token.stakeFee.toLocaleString("en-us")}%
+                    </Typography>
+                    <Typography variant="body2">
+                      Unstake Fee: {token.unstakeFee.toLocaleString("en-us")}%
+                    </Typography>
+                    <TextField
+                      label="Amount"
+                      type="number"
+                      margin="normal"
+                      value={stakingAmount}
+                      onChange={handleStakingAmountChange}
+                      InputProps={{
+                        endAdornment: (
+                          <InputAdornment position="end">
+                            <Button onClick={handleStakingAmountMax}>
+                              MAX
+                            </Button>
+                          </InputAdornment>
+                        ),
+                      }}
+                    />
+                    <br />
+                    {!isConnected ? (
+                      <ConnectWallet />
+                    ) : (
+                      <Button
+                        variant="contained"
+                        size="large"
+                        color="secondary"
+                        onClick={handleStaking}
+                      >
+                        {stakingOption}
+                      </Button>
+                    )}
+                  </TabPanel>
+                </TabContext>
               </Box>
-              <TabPanel value={stakingOption}>
-                <Typography variant="body2">
-                  Your Wallet Balance:{" "}
-                  {token.stakerData.walletBalance.toLocaleString("en-us")}{" "}
-                  {token.name}
-                </Typography>
-                <Typography variant="body2">
-                  Your Staking Balance:{" "}
-                  {token.stakerData.stakingBalance.toLocaleString("en-us")}{" "}
-                  {token.name}
-                </Typography>
-                <br />
-                <Divider />
-                <br />
-                <Typography variant="body2">
-                  Stake Fee: {token.stakeFee.toLocaleString("en-us")}%
-                </Typography>
-                <Typography variant="body2">
-                  Unstake Fee: {token.unstakeFee.toLocaleString("en-us")}%
-                </Typography>
-                <TextField
-                  label="Amount"
-                  type="number"
-                  margin="normal"
-                  value={stakingAmount}
-                  onChange={handleStakingAmountChange}
-                  InputProps={{
-                    endAdornment: (
-                      <InputAdornment position="end">
-                        <Button onClick={handleStakingAmountMax}>MAX</Button>
-                      </InputAdornment>
-                    ),
-                  }}
-                />
-                <br />
-                {!isConnected ? (
-                  <ConnectWallet />
-                ) : (
-                  <Button
-                    variant="contained"
-                    size="large"
-                    color="secondary"
-                    onClick={handleStaking}
-                  >
-                    {stakingOption}
-                  </Button>
-                )}
-              </TabPanel>
-            </TabContext>
-          </Box>
-          <Box my={5} display={{ xs: "block", sm: "none" }}>
-            <StakerStakingInfo token={token} tokens={tokens} />
-          </Box>
-        </TableCell>
-        <TableCell sx={{ width: { sm: "50%" } }}>
-          <Box display={{ xs: "none", sm: "block" }}>
-            <StakerStakingInfo token={token} tokens={tokens} />
-          </Box>
-        </TableCell>
-      </TableRow>
-    </React.Fragment>
+              <Box my={5} display={{ xs: "block", sm: "none" }}>
+                <StakerStakingInfo token={token} tokens={tokens} />
+              </Box>
+            </TableCell>
+            <TableCell sx={{ width: { sm: "50%" } }}>
+              <Box display={{ xs: "none", sm: "block" }}>
+                <StakerStakingInfo token={token} tokens={tokens} />
+              </Box>
+            </TableCell>
+          </TableRow>
+        </TableBody>
+      </Table>
+    </Box>
   );
 }
 
@@ -267,13 +274,7 @@ function TokenRow(props: { token: Token; tokens: Token[] }) {
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
           <Collapse in={open} timeout="auto" unmountOnExit>
-            <Box sx={{ margin: 1 }}>
-              <Table size="small" aria-label="staking">
-                <TableBody>
-                  <TokenInnerRow token={token} tokens={tokens} />
-                </TableBody>
-              </Table>
-            </Box>
+            <StakingTable token={token} tokens={tokens} />
           </Collapse>
         </TableCell>
       </TableRow>
@@ -281,19 +282,128 @@ function TokenRow(props: { token: Token; tokens: Token[] }) {
   );
 }
 
+//////////////////////////////////////////////////
+interface TokenSort {
+  name: string;
+  type: number;
+}
+
+function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
+  if (b[orderBy] < a[orderBy]) {
+    return -1;
+  }
+  if (b[orderBy] > a[orderBy]) {
+    return 1;
+  }
+  return 0;
+}
+
+type Order = "asc" | "desc";
+
+function getComparator<Key extends keyof any>(
+  order: Order,
+  orderBy: Key
+): (
+  a: { [key in Key]: number | string },
+  b: { [key in Key]: number | string }
+) => number {
+  return order === "desc"
+    ? (a, b) => descendingComparator(a, b, orderBy)
+    : (a, b) => -descendingComparator(a, b, orderBy);
+}
+
+// This method is created for cross-browser compatibility, if you don't
+// need to support IE11, you can use Array.prototype.sort() directly
+function stableSort<T>(
+  array: readonly T[],
+  comparator: (a: T, b: T) => number
+) {
+  const stabilizedThis = array.map((el, index) => [el, index] as [T, number]);
+  stabilizedThis.sort((a, b) => {
+    const order = comparator(a[0], b[0]);
+    if (order !== 0) {
+      return order;
+    }
+    return a[1] - b[1];
+  });
+  return stabilizedThis.map((el) => el[0]);
+}
+//////////////////////////////////////////////////
+
 export const TokensTable = (props: { tokens: Token[] }) => {
   const { tokens } = props;
+
+  const tokensSort = tokens.map((token) => {
+    return { name: token.name, type: token.type };
+  });
+
+  const [order, setOrder] = React.useState<Order>("asc");
+  const [orderBy, setOrderBy] = React.useState<keyof TokenSort>("type");
+  const [page, setPage] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+
+  const handleRequestSort = (
+    event: React.MouseEvent<unknown>,
+    property: keyof TokenSort
+  ) => {
+    const isAsc = orderBy === property && order === "asc";
+    setOrder(isAsc ? "desc" : "asc");
+    setOrderBy(property);
+  };
+
+  const handleChangePage = (event: unknown, newPage: number) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
+  // Avoid a layout jump when reaching the last page with empty rows.
+  const emptyRows =
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - tokens.length) : 0;
+
   return (
-    <Box mx={{ md: "7.5%" }}>
+    <Box component={Paper} mx={{ md: "7.5%" }}>
       <TableContainer component={Paper}>
-        <Table aria-label="tokens table">
+        <Table aria-label="tokens table" size="small">
           <TableBody>
-            {tokens.map((token) => (
+            {/* {tokens.map((token) => (
               <TokenRow key={token.name} token={token} tokens={tokens} />
-            ))}
+            ))} */}
+            {/* if you don't need to support IE11, you can replace the `stableSort` call with:
+              rows.slice().sort(getComparator(order, orderBy)) */}
+            {stableSort(tokens, getComparator(order, orderBy))
+              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+              .map((token) => {
+                return (
+                  <TokenRow key={token.name} token={token} tokens={tokens} />
+                );
+              })}
+            {emptyRows > 0 && (
+              <TableRow
+                style={{
+                  height: 33 * emptyRows,
+                }}
+              >
+                <TableCell colSpan={5} />
+              </TableRow>
+            )}
           </TableBody>
         </Table>
       </TableContainer>
+      <TablePagination
+        rowsPerPageOptions={[10, 25, 50]}
+        component="div"
+        count={tokensSort.length}
+        rowsPerPage={rowsPerPage}
+        page={page}
+        onPageChange={handleChangePage}
+        onRowsPerPageChange={handleChangeRowsPerPage}
+      />
     </Box>
   );
 };
