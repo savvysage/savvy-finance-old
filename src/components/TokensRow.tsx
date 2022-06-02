@@ -16,7 +16,7 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import { Token } from "./Main";
 import { StakingTable } from "./StakingTable";
 
-export function TokensRow(props: { token: Token; tokens: Token[] }) {
+export const TokensRow = (props: { token: Token; tokens: Token[] }) => {
   const { token, tokens } = props;
   const [open, setOpen] = React.useState(false);
   const SmallAvatar = styled(Avatar)(({ theme }) => ({
@@ -109,7 +109,7 @@ export function TokensRow(props: { token: Token; tokens: Token[] }) {
         </TableCell>
       </TableRow>
       <TableRow>
-        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
+        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={5}>
           <Collapse in={open} timeout="auto" unmountOnExit>
             <StakingTable token={token} tokens={tokens} />
           </Collapse>
@@ -117,4 +117,4 @@ export function TokensRow(props: { token: Token; tokens: Token[] }) {
       </TableRow>
     </React.Fragment>
   );
-}
+};

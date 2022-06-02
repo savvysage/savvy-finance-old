@@ -48,7 +48,7 @@ function StakerStakingInfo(props: { token: Token; tokens: Token[] }) {
   );
 }
 
-export function StakingTable(props: { token: Token; tokens: Token[] }) {
+export const StakingTable = (props: { token: Token; tokens: Token[] }) => {
   const { token, tokens } = props;
   const { account } = useEthers();
   const isConnected = account !== undefined;
@@ -166,4 +166,4 @@ export function StakingTable(props: { token: Token; tokens: Token[] }) {
       </Table>
     </Box>
   );
-}
+};

@@ -12,12 +12,13 @@ import {
 import { Token } from "./Main";
 import { TokensRow } from "./TokensRow";
 
+type Order = "asc" | "desc";
 interface TokenSort {
   name: string;
   type: number;
 }
 
-export function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
+function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   if (b[orderBy] < a[orderBy]) {
     return -1;
   }
@@ -26,8 +27,6 @@ export function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   }
   return 0;
 }
-
-type Order = "asc" | "desc";
 
 function getComparator<Key extends keyof any>(
   order: Order,
@@ -57,14 +56,9 @@ function stableSort<T>(
   });
   return stabilizedThis.map((el) => el[0]);
 }
-//////////////////////////////////////////////////
 
 export const TokensTable = (props: { tokens: Token[] }) => {
   const { tokens } = props;
-
-  const tokensSort = tokens.map((token) => {
-    return { name: token.name, type: token.type };
-  });
 
   const [order, setOrder] = React.useState<Order>("asc");
   const [orderBy, setOrderBy] = React.useState<keyof TokenSort>("type");
@@ -97,14 +91,14 @@ export const TokensTable = (props: { tokens: Token[] }) => {
 
   return (
     <Box component={Paper} mx={{ md: "7.5%" }}>
-      <TableContainer component={Paper}>
+      <TableContainer>
         <Table aria-label="tokens table" size="small">
           <TableBody>
             {/* {tokens.map((token) => (
-                <TokenRow key={token.name} token={token} tokens={tokens} />
+                <TokensRow key={token.name} token={token} tokens={tokens} />
               ))} */}
             {/* if you don't need to support IE11, you can replace the `stableSort` call with:
-                rows.slice().sort(getComparator(order, orderBy)) */}
+                tokens.slice().sort(getComparator(order, orderBy)) */}
             {stableSort(tokens, getComparator(order, orderBy))
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((token) => {
@@ -125,9 +119,9 @@ export const TokensTable = (props: { tokens: Token[] }) => {
         </Table>
       </TableContainer>
       <TablePagination
-        rowsPerPageOptions={[10, 25, 50]}
+        rowsPerPageOptions={[5, 10, 25, 50]}
         component="div"
-        count={tokensSort.length}
+        count={tokens.length}
         rowsPerPage={rowsPerPage}
         page={page}
         onPageChange={handleChangePage}
