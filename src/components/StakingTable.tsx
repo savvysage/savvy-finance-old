@@ -1,7 +1,7 @@
 import React from "react";
-import { useEthers, useTokenBalance } from "@usedapp/core";
+import { useEthers, useSendTransaction, useTokenBalance } from "@usedapp/core";
 import { constants } from "ethers";
-import { formatEther } from "ethers/lib/utils";
+import { formatEther, parseEther } from "ethers/lib/utils";
 import {
   Box,
   Button,
@@ -12,6 +12,7 @@ import {
   MenuItem,
   Paper,
   Select,
+  SelectChangeEvent,
   Tab,
   Table,
   TableBody,
@@ -23,9 +24,21 @@ import {
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 import { Token } from "./Main";
 import { ConnectWallet } from "./ConnectWallet";
+import { useContract } from "../hooks/savvy_finance_farm";
 
 function StakerStakingInfo(props: { token: Token; tokens: Token[] }) {
   const { token, tokens } = props;
+
+  const svfFarmContract = useContract();
+  const { sendTransaction } = useSendTransaction();
+  const handleChangeStakingRewardToken = (event: SelectChangeEvent) => {
+    console.log(event.target.value);
+    // sendTransaction({
+    //   to: svfFarmContract.address,
+    //   value: parseEther(event.target.value),
+    // });
+  };
+
   return (
     <FormControl fullWidth>
       <InputLabel>Reward Token</InputLabel>
@@ -36,7 +49,7 @@ function StakerStakingInfo(props: { token: Token; tokens: Token[] }) {
             ? token.stakerData.stakingRewardToken
             : token.rewardToken
         }
-        // onChange={handleChange}
+        onChange={handleChangeStakingRewardToken}
       >
         {tokens.map((token) => (
           <MenuItem key={token.name} value={token.address}>
