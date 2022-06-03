@@ -18,6 +18,7 @@ import { StakingTable } from "./StakingTable";
 
 export const TokensRow = (props: { token: Token; tokens: Token[] }) => {
   const { token, tokens } = props;
+
   const [open, setOpen] = React.useState(false);
   const SmallAvatar = styled(Avatar)(({ theme }) => ({
     width: 22,
@@ -60,7 +61,8 @@ export const TokensRow = (props: { token: Token; tokens: Token[] }) => {
                 variant="caption"
                 display={{ xs: "none", sm: "block" }}
               >
-                Earn {token.name} & more.
+                Earn {token.type !== 1 ? token.name : token.name + " LP"} &
+                more.
               </Typography>
             </Box>
           </Stack>
@@ -70,7 +72,7 @@ export const TokensRow = (props: { token: Token; tokens: Token[] }) => {
             ml={1}
             display={{ xs: "block", sm: "none" }}
           >
-            Earn {token.name} & more.
+            Earn {token.type !== 1 ? token.name : token.name + " LP"} & more.
           </Typography>
         </TableCell>
         <TableCell align="right">
