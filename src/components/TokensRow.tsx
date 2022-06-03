@@ -53,10 +53,12 @@ export const TokensRow = (props: { token: Token; tokens: Token[] }) => {
               </Badge>
             )}
             <Box>
-              <Typography variant="h6">Stake {token.name}</Typography>
+              <Typography variant="button" fontSize={{ sm: "1.1rem" }}>
+                Stake {token.type !== 1 ? token.name : token.name + " LP"}
+              </Typography>
               <Typography
                 variant="caption"
-                display={{ xs: "none", sm: "block" }}
+                display={{ xs: "block", sm: "block" }}
               >
                 Earn {token.name} & more.
               </Typography>
@@ -64,8 +66,8 @@ export const TokensRow = (props: { token: Token; tokens: Token[] }) => {
           </Stack>
           <Typography
             variant="caption"
-            align="center"
-            display={{ xs: "block", sm: "none" }}
+            align="justify"
+            display={{ xs: "none", sm: "none" }}
           >
             Earn {token.name} & more.
           </Typography>

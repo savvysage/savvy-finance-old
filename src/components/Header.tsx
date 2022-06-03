@@ -8,20 +8,19 @@ export const Header = () => {
         background:
           "linear-gradient(139.73deg, rgb(229, 253, 255) 0%, rgb(243, 239, 255) 100%)",
         my: { xs: "5%", md: "3.75%", xl: "2.5%" },
-        px: "7.5%",
+        px: "10%",
         py: "2.5%",
-        borderRadius: 10,
+        borderRadius: 7.5,
       }}
     >
       <Typography
-        variant="h2"
+        variant="h3"
         component="h1"
         sx={{ color: "primary.main", fontWeight: "bold" }}
       >
         Staking
       </Typography>
       <Typography
-        variant="h6"
         component="h2"
         sx={{ color: "secondary.main", fontWeight: "bold" }}
       >

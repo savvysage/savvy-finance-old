@@ -90,7 +90,7 @@ export const TokensTable = (props: { tokens: Token[] }) => {
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - tokens.length) : 0;
 
   return (
-    <Box component={Paper} mx={{ md: "7.5%" }}>
+    <Box component={Paper} mx={{ md: "10%" }}>
       <TableContainer>
         <Table aria-label="tokens table" size="small">
           <TableBody>
