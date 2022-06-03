@@ -58,7 +58,7 @@ export const TokensRow = (props: { token: Token; tokens: Token[] }) => {
               </Typography>
               <Typography
                 variant="caption"
-                display={{ xs: "block", sm: "block" }}
+                display={{ xs: "none", sm: "block" }}
               >
                 Earn {token.name} & more.
               </Typography>
@@ -67,7 +67,8 @@ export const TokensRow = (props: { token: Token; tokens: Token[] }) => {
           <Typography
             variant="caption"
             align="justify"
-            display={{ xs: "none", sm: "none" }}
+            ml={1}
+            display={{ xs: "block", sm: "none" }}
           >
             Earn {token.name} & more.
           </Typography>
