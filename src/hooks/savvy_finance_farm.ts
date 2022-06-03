@@ -12,7 +12,7 @@ import SavvyFinanceFarm from "../chain-info/contracts/SavvyFinanceFarm.json";
 export type TokenData = {
   isActive: boolean;
   name: string;
-  type: number;
+  category: number;
   price: number;
   rewardBalance: number;
   stakingBalance: number;
@@ -74,7 +74,7 @@ export const useTokensData = (tokensAddresses: string[]): TokenData[] | [] => {
     if (result?.value) {
       const isActive = result.value["isActive"];
       const name = result.value["name"];
-      const type = parseInt(result.value["_type"]);
+      const category = parseInt(result.value["_type"]);
       const price = parseFloat(formatEther(result.value["price"]));
       const rewardBalance = parseFloat(
         formatEther(result.value["rewardBalance"])
@@ -90,7 +90,7 @@ export const useTokensData = (tokensAddresses: string[]): TokenData[] | [] => {
       tokensData[index] = {
         isActive: isActive,
         name: name,
-        type: type,
+        category: category,
         price: price,
         rewardBalance: rewardBalance,
         stakingBalance: stakingBalance,

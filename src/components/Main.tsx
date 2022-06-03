@@ -10,7 +10,7 @@ export type Token = {
   address: string;
   isActive: boolean;
   name: string;
-  type: number;
+  category: number;
   price: number;
   rewardBalance: number;
   stakingBalance: number;
@@ -51,7 +51,7 @@ export const Main = () => {
           address: tokenAddress,
           isActive: tokensData[index].isActive,
           name: tokensData[index].name,
-          type: tokensData[index].type,
+          category: tokensData[index].category,
           price: tokensData[index].price,
           rewardBalance: tokensData[index].rewardBalance,
           stakingBalance: tokensData[index].stakingBalance,
@@ -61,7 +61,7 @@ export const Main = () => {
           rewardToken: tokensData[index].rewardToken,
           admin: tokensData[index].admin,
           icon:
-            tokensData[index].type === 0
+            tokensData[index].category === 0
               ? [
                   process.env.PUBLIC_URL +
                     `/icons/${tokensData[index].name.toLowerCase()}.png`,

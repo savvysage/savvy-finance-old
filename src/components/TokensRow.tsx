@@ -37,7 +37,7 @@ export const TokensRow = (props: { token: Token; tokens: Token[] }) => {
       >
         <TableCell component="th" scope="row">
           <Stack direction="row" alignItems="center" spacing={1}>
-            {token.type === 0 ? (
+            {token.category === 0 ? (
               <Avatar alt={token.name + " Icon"} src={token.icon[0]} />
             ) : (
               <Badge
@@ -55,13 +55,13 @@ export const TokensRow = (props: { token: Token; tokens: Token[] }) => {
             )}
             <Box>
               <Typography variant="button" fontSize={{ sm: "1.1rem" }}>
-                Stake {token.type !== 1 ? token.name : token.name + " LP"}
+                Stake {token.category !== 1 ? token.name : token.name + " LP"}
               </Typography>
               <Typography
                 variant="caption"
                 display={{ xs: "none", sm: "block" }}
               >
-                Earn {token.type !== 1 ? token.name : token.name + " LP"} &
+                Earn {token.category !== 1 ? token.name : token.name + " LP"} &
                 more.
               </Typography>
             </Box>
@@ -72,7 +72,8 @@ export const TokensRow = (props: { token: Token; tokens: Token[] }) => {
             ml={1}
             display={{ xs: "block", sm: "none" }}
           >
-            Earn {token.type !== 1 ? token.name : token.name + " LP"} & more.
+            Earn {token.category !== 1 ? token.name : token.name + " LP"} &
+            more.
           </Typography>
         </TableCell>
         <TableCell align="right">

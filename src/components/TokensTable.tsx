@@ -15,7 +15,7 @@ import { TokensRow } from "./TokensRow";
 type Order = "asc" | "desc";
 interface TokenSort {
   name: string;
-  type: number;
+  category: number;
 }
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
@@ -61,7 +61,7 @@ export const TokensTable = (props: { tokens: Token[] }) => {
   const { tokens } = props;
 
   const [order, setOrder] = React.useState<Order>("asc");
-  const [orderBy, setOrderBy] = React.useState<keyof TokenSort>("type");
+  const [orderBy, setOrderBy] = React.useState<keyof TokenSort>("category");
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
