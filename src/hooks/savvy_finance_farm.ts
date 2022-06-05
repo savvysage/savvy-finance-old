@@ -32,6 +32,23 @@ export type TokenStakerData = {
   rewardBalance: number;
   stakingBalance: number;
   stakingRewardToken: string;
+  stakingRewards: {
+    id: number;
+    staker: string;
+    stakedToken: string;
+    stakedTokenPrice: number;
+    stakedTokenAmount: number;
+    rewardToken: string;
+    rewardTokenPrice: number;
+    rewardTokenAmount: number;
+    stakingDurationInSeconds: number;
+    actionPerformed: string[2];
+    timestampAdded: number;
+    timestampLastUpdated: number;
+  }[];
+  timestampLastRewarded: number;
+  timestampAdded: number;
+  timestampLastUpdated: number;
 };
 
 export const useContract = (): Contract => {
@@ -70,32 +87,35 @@ export const useTokensData = (tokensAddresses: string[]): TokenData[] | [] => {
   const calls =
     tokensAddresses.map((tokenAddress) => ({
       contract: contract,
-      method: "tokensData",
+      method: "getTokenData",
       args: [tokenAddress],
     })) ?? [];
   const results = useCalls(calls) ?? [];
 
   results.forEach((result, index) => {
     if (result?.value) {
+      // console.log(result.value[0]);
       const address = calls[index]["args"][0];
-      const isActive = result.value["isActive"];
-      const hasMultiReward = result.value["hasMultiReward"];
-      const name = result.value["name"];
-      const category = parseInt(result.value["category"]);
-      const price = parseFloat(formatEther(result.value["price"]));
+      const isActive = result.value[0]["isActive"];
+      const hasMultiReward = result.value[0]["hasMultiReward"];
+      const name = result.value[0]["name"];
+      const category = parseInt(result.value[0]["category"]);
+      const price = parseFloat(formatEther(result.value[0]["price"]));
       const rewardBalance = parseFloat(
-        formatEther(result.value["rewardBalance"])
+        formatEther(result.value[0]["rewardBalance"])
       );
       const stakingBalance = parseFloat(
-        formatEther(result.value["stakingBalance"])
+        formatEther(result.value[0]["stakingBalance"])
       );
-      const stakeFee = parseInt(formatEther(result.value["stakeFee"]));
-      const unstakeFee = parseInt(formatEther(result.value["unstakeFee"]));
-      const stakingApr = parseInt(formatEther(result.value["stakingApr"]));
-      const rewardToken = result.value["rewardToken"];
-      const admin = result.value["admin"];
-      const timestampAdded = result.value["timestampAdded"];
-      const timestampLastUpdated = result.value["timestampLastUpdated"];
+      const stakeFee = parseInt(formatEther(result.value[0]["stakeFee"]));
+      const unstakeFee = parseInt(formatEther(result.value[0]["unstakeFee"]));
+      const stakingApr = parseInt(formatEther(result.value[0]["stakingApr"]));
+      const rewardToken = result.value[0]["rewardToken"];
+      const admin = result.value[0]["admin"];
+      const timestampAdded = parseInt(result.value[0]["timestampAdded"]);
+      const timestampLastUpdated = parseInt(
+        result.value[0]["timestampLastUpdated"]
+      );
       tokensData[index] = {
         address: address,
         isActive: isActive,
@@ -131,26 +151,72 @@ export const useTokensStakerData = (
   const calls =
     tokensAddresses.map((tokenAddress) => ({
       contract: contract,
-      method: "tokensStakersData",
+      method: "getTokenStakerData",
       args: [tokenAddress, stakerAddress],
     })) ?? [];
   const results = useCalls(calls) ?? [];
 
   results.forEach((result, index) => {
     if (result?.value) {
+      // console.log(result.value[0]);
       const walletBalance = 0;
       const rewardBalance = parseFloat(
-        formatEther(result.value["rewardBalance"])
+        formatEther(result.value[0]["rewardBalance"])
       );
       const stakingBalance = parseFloat(
-        formatEther(result.value["stakingBalance"])
+        formatEther(result.value[0]["stakingBalance"])
       );
-      const stakingRewardToken = result.value["stakingRewardToken"];
+      const stakingRewardToken = result.value[0]["stakingRewardToken"];
+      const stakingRewards = result.value[0]["stakingRewards"].map(
+        (stakingReward: {}) => {
+          // console.log(stakingReward);
+          return {
+            id: parseInt(stakingReward["id"]),
+            staker: stakingReward["staker"],
+            stakedToken: stakingReward["stakedToken"],
+            stakedTokenPrice: parseFloat(
+              formatEther(stakingReward["stakedTokenPrice"])
+            ),
+            stakedTokenAmount: parseFloat(
+              formatEther(stakingReward["stakedTokenAmount"])
+            ),
+            rewardToken: stakingReward["rewardToken"],
+            rewardTokenPrice: parseFloat(
+              formatEther(stakingReward["rewardTokenPrice"])
+            ),
+            rewardTokenAmount: parseFloat(
+              formatEther(stakingReward["rewardTokenAmount"])
+            ),
+            stakingDurationInSeconds: parseFloat(
+              formatEther(stakingReward["stakingDurationInSeconds"])
+            ),
+            actionPerformed: [
+              stakingReward["actionPerformed"][0],
+              stakingReward["actionPerformed"][1],
+            ],
+            timestampAdded: parseInt(stakingReward["timestampAdded"]),
+            timestampLastUpdated: parseInt(
+              stakingReward["timestampLastUpdated"]
+            ),
+          };
+        }
+      );
+      const timestampLastRewarded = parseInt(
+        result.value[0]["timestampLastRewarded"]
+      );
+      const timestampAdded = parseInt(result.value[0]["timestampAdded"]);
+      const timestampLastUpdated = parseInt(
+        result.value[0]["timestampLastUpdated"]
+      );
       tokensStakerData[index] = {
         walletBalance: walletBalance,
         rewardBalance: rewardBalance,
         stakingBalance: stakingBalance,
         stakingRewardToken: stakingRewardToken,
+        stakingRewards: stakingRewards,
+        timestampLastRewarded: timestampLastRewarded,
+        timestampAdded: timestampAdded,
+        timestampLastUpdated: timestampLastUpdated,
       };
     }
     if (result?.error)
