@@ -1,6 +1,6 @@
 import { useEthers } from "@usedapp/core";
 import { constants } from "ethers";
-import { Stack } from "@mui/material";
+import { Box, CircularProgress, Stack } from "@mui/material";
 import { TokensTable } from "./TokensTable";
 import * as svfFarm from "../hooks/savvy_finance_farm";
 import { getContractAddress } from "../common";
@@ -12,6 +12,8 @@ export type Token = svfFarm.TokenData & {
 };
 
 export const Main = () => {
+  var isLoading = true;
+
   const { account } = useEthers();
   const tokensAddresses: string[] = svfFarm.useTokens();
   const tokensData: svfFarm.TokenData[] =
@@ -33,7 +35,7 @@ export const Main = () => {
     if (
       tokensData.length === tokensAddresses.length &&
       tokensStakerData.length === tokensData.length
-    )
+    ) {
       tokensAddresses.forEach((tokenAddress, index) => {
         tokens[index] = {
           address: tokensData[index].address,
@@ -70,10 +72,21 @@ export const Main = () => {
           stakerData: tokensStakerData[index],
         };
       });
+      isLoading = false;
+    }
 
   return (
-    <Stack spacing={2}>
-      <TokensTable tokens={tokens} />
-    </Stack>
+    <>
+      {isLoading ? (
+        <Box sx={{ display: "inline-flex", justifyContent: "center" }}>
+          <CircularProgress />
+        </Box>
+      ) : (
+        ""
+      )}
+      <Stack spacing={2}>
+        <TokensTable tokens={tokens} />
+      </Stack>
+    </>
   );
 };

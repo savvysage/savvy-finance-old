@@ -107,9 +107,9 @@ export const useTokensData = (tokensAddresses: string[]): TokenData[] | [] => {
       const stakingBalance = parseFloat(
         formatEther(result.value[0]["stakingBalance"])
       );
-      const stakeFee = parseInt(formatEther(result.value[0]["stakeFee"]));
-      const unstakeFee = parseInt(formatEther(result.value[0]["unstakeFee"]));
-      const stakingApr = parseInt(formatEther(result.value[0]["stakingApr"]));
+      const stakeFee = parseFloat(formatEther(result.value[0]["stakeFee"]));
+      const unstakeFee = parseFloat(formatEther(result.value[0]["unstakeFee"]));
+      const stakingApr = parseFloat(formatEther(result.value[0]["stakingApr"]));
       const rewardToken = result.value[0]["rewardToken"];
       const admin = result.value[0]["admin"];
       const timestampAdded = parseInt(result.value[0]["timestampAdded"]);
@@ -187,7 +187,7 @@ export const useTokensStakerData = (
             rewardTokenAmount: parseFloat(
               formatEther(stakingReward["rewardTokenAmount"])
             ),
-            stakingDurationInSeconds: parseFloat(
+            stakingDurationInSeconds: parseInt(
               formatEther(stakingReward["stakingDurationInSeconds"])
             ),
             actionPerformed: [
