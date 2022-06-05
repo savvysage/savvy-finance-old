@@ -4,13 +4,15 @@ import { formatEther } from "ethers/lib/utils";
 import { useState } from "react";
 import axios from "axios";
 // import { networks } from "../helper-config.json"
-import contractAddresses from "../chain-info/deployments/map.json";
-import SavvyFinanceFarm from "../chain-info/contracts/SavvyFinanceFarm.json";
+import contractAddresses from "../back_end_build/deployments/map.json";
+import SavvyFinanceFarm from "../back_end_build/contracts/SavvyFinanceFarm.json";
 
 // axios.defaults.headers.common["Access-Control-Allow-Origin"] = "*";
 
 export type TokenData = {
+  address: string;
   isActive: boolean;
+  hasMultiReward: boolean;
   name: string;
   category: number;
   price: number;
@@ -21,10 +23,13 @@ export type TokenData = {
   stakingApr: number;
   rewardToken: string;
   admin: string;
+  timestampAdded: number;
+  timestampLastUpdated: number;
 };
 
 export type TokenStakerData = {
   walletBalance: number;
+  rewardBalance: number;
   stakingBalance: number;
   stakingRewardToken: string;
 };
@@ -72,9 +77,11 @@ export const useTokensData = (tokensAddresses: string[]): TokenData[] | [] => {
 
   results.forEach((result, index) => {
     if (result?.value) {
+      const address = calls[index]["args"][0];
       const isActive = result.value["isActive"];
+      const hasMultiReward = result.value["hasMultiReward"];
       const name = result.value["name"];
-      const category = parseInt(result.value["_type"]);
+      const category = parseInt(result.value["category"]);
       const price = parseFloat(formatEther(result.value["price"]));
       const rewardBalance = parseFloat(
         formatEther(result.value["rewardBalance"])
@@ -87,8 +94,12 @@ export const useTokensData = (tokensAddresses: string[]): TokenData[] | [] => {
       const stakingApr = parseInt(formatEther(result.value["stakingApr"]));
       const rewardToken = result.value["rewardToken"];
       const admin = result.value["admin"];
+      const timestampAdded = result.value["timestampAdded"];
+      const timestampLastUpdated = result.value["timestampLastUpdated"];
       tokensData[index] = {
+        address: address,
         isActive: isActive,
+        hasMultiReward: hasMultiReward,
         name: name,
         category: category,
         price: price,
@@ -99,6 +110,8 @@ export const useTokensData = (tokensAddresses: string[]): TokenData[] | [] => {
         stakingApr: stakingApr,
         rewardToken: rewardToken,
         admin: admin,
+        timestampAdded: timestampAdded,
+        timestampLastUpdated: timestampLastUpdated,
       };
     }
     if (result?.error)
@@ -118,7 +131,7 @@ export const useTokensStakerData = (
   const calls =
     tokensAddresses.map((tokenAddress) => ({
       contract: contract,
-      method: "stakingData",
+      method: "tokensStakersData",
       args: [tokenAddress, stakerAddress],
     })) ?? [];
   const results = useCalls(calls) ?? [];
@@ -126,10 +139,16 @@ export const useTokensStakerData = (
   results.forEach((result, index) => {
     if (result?.value) {
       const walletBalance = 0;
-      const stakingBalance = parseFloat(formatEther(result.value["balance"]));
-      const stakingRewardToken = result.value["rewardToken"];
+      const rewardBalance = parseFloat(
+        formatEther(result.value["rewardBalance"])
+      );
+      const stakingBalance = parseFloat(
+        formatEther(result.value["stakingBalance"])
+      );
+      const stakingRewardToken = result.value["stakingRewardToken"];
       tokensStakerData[index] = {
         walletBalance: walletBalance,
+        rewardBalance: rewardBalance,
         stakingBalance: stakingBalance,
         stakingRewardToken: stakingRewardToken,
       };

@@ -6,19 +6,7 @@ import * as svfFarm from "../hooks/savvy_finance_farm";
 import { getContractAddress } from "../common";
 import tokensJSON from "../tokens.json";
 
-export type Token = {
-  address: string;
-  isActive: boolean;
-  name: string;
-  category: number;
-  price: number;
-  rewardBalance: number;
-  stakingBalance: number;
-  stakeFee: number;
-  unstakeFee: number;
-  stakingApr: number;
-  rewardToken: string;
-  admin: string;
+export type Token = svfFarm.TokenData & {
   icon: string[];
   stakerData: svfFarm.TokenStakerData;
 };
@@ -48,8 +36,9 @@ export const Main = () => {
     )
       tokensAddresses.forEach((tokenAddress, index) => {
         tokens[index] = {
-          address: tokenAddress,
+          address: tokensData[index].address,
           isActive: tokensData[index].isActive,
+          hasMultiReward: tokensData[index].hasMultiReward,
           name: tokensData[index].name,
           category: tokensData[index].category,
           price: tokensData[index].price,
@@ -60,6 +49,8 @@ export const Main = () => {
           stakingApr: tokensData[index].stakingApr,
           rewardToken: tokensData[index].rewardToken,
           admin: tokensData[index].admin,
+          timestampAdded: tokensData[index].timestampAdded,
+          timestampLastUpdated: tokensData[index].timestampLastUpdated,
           icon:
             tokensData[index].category === 0
               ? [

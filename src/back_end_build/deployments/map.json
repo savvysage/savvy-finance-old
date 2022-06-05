@@ -1,0 +1,17 @@
+{
+  "97": {
+    "ProxyAdmin": [
+      "0xbDE1c017B1e83f4e339464596F493d16EaC36e81"
+    ],
+    "SavvyFinanceFarm": [
+      "0x416f78331732e574a8723c91abB99321Ca9e28e5"
+    ],
+    "SavvyFinanceUpgradeable": [
+      "0x115311a96f9D0Fad9369A2f549587Bb36e007a79"
+    ],
+    "TransparentUpgradeableProxy": [
+      "0x91eB221004119457E6b65A74E4Bd552288EeEd53",
+      "0xc33210AE7977318Ed3156667856EF3BEb3618eeF"
+    ]
+  }
+}
