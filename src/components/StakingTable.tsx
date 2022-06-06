@@ -44,25 +44,30 @@ function StakerStakingInfo(props: { token: Token; tokens: Token[] }) {
 
   return (
     <Stack spacing={2.5}>
-      <Box component={Paper} p={2.5}>
-        <FormControl fullWidth>
-          <InputLabel>Reward Token</InputLabel>
-          <Select
-            label="Reward Token"
-            defaultValue={
-              token.stakerData.stakingRewardToken !== constants.AddressZero
-                ? token.stakerData.stakingRewardToken
-                : token.rewardToken
-            }
-            onChange={handleChangeStakingRewardToken}
-          >
-            {tokens.map((token) => (
-              <MenuItem key={token.name} value={token.address}>
-                {token.name}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
+      <Box component={Paper}>
+        <Box px={2.5} py={1.5} sx={{ borderBottom: 1, borderColor: "divider" }}>
+          <Typography variant="button">Change Reward Token</Typography>
+        </Box>
+        <Box p={2.5}>
+          <FormControl fullWidth>
+            <InputLabel>Reward Token</InputLabel>
+            <Select
+              label="Reward Token"
+              defaultValue={
+                token.stakerData.stakingRewardToken !== constants.AddressZero
+                  ? token.stakerData.stakingRewardToken
+                  : token.rewardToken
+              }
+              onChange={handleChangeStakingRewardToken}
+            >
+              {tokens.map((token) => (
+                <MenuItem key={token.name} value={token.address}>
+                  {token.name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Box>
       </Box>
     </Stack>
   );
@@ -76,46 +81,32 @@ export const StakingTable = (props: { token: Token; tokens: Token[] }) => {
     formatEther(useTokenBalance(token.address, walletAddress) ?? 0)
   );
 
-  const [withrawRewardAmount, setWithrawRewardAmount] = React.useState("");
-  const handleChangeWithrawRewardAmount = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setWithrawRewardAmount(event.target.value);
-  };
-  const handleMaxWithrawRewardAmount = (
-    event: React.MouseEvent<HTMLButtonElement>
-  ) => {
-    setWithrawRewardAmount(token.stakerData.rewardBalance.toString());
-  };
-  const handleWithrawReward = (event: React.MouseEvent<HTMLButtonElement>) => {
-    console.log(withrawRewardAmount);
-  };
-
-  const [stakingOption, setStakingOption] = React.useState("stake");
-  const handleChangeStakingOption = (
+  const [tabOption, setTabOption] = React.useState("stake");
+  const handleChangeTabOption = (
     event: React.SyntheticEvent,
     newOption: string
   ) => {
-    setStakingOption(newOption);
+    setTabOption(newOption);
   };
 
-  const [stakingAmount, setStakingAmount] = React.useState("");
-  const handleChangeStakingAmount = (
+  const [tabAmount, setTabAmount] = React.useState("");
+  const handleChangeTabAmount = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    setStakingAmount(event.target.value);
+    setTabAmount(event.target.value);
   };
-  const handleMaxStakingAmount = (
-    event: React.MouseEvent<HTMLButtonElement>
-  ) => {
-    if (stakingOption === "stake")
-      setStakingAmount(token.stakerData.walletBalance.toString());
-    if (stakingOption === "unstake")
-      setStakingAmount(token.stakerData.stakingBalance.toString());
+  const handleMaxTabAmount = (event: React.MouseEvent<HTMLButtonElement>) => {
+    if (tabOption === "stake")
+      setTabAmount(token.stakerData.walletBalance.toString());
+    if (tabOption === "unstake")
+      setTabAmount(token.stakerData.stakingBalance.toString());
+    if (tabOption === "withdraw reward")
+      setTabAmount(token.stakerData.rewardBalance.toString());
   };
   const handleStaking = (event: React.MouseEvent<HTMLButtonElement>) => {
-    if (stakingOption === "stake") console.log(stakingOption);
-    if (stakingOption === "unstake") console.log(stakingOption);
+    if (tabOption === "stake") console.log(tabOption);
+    if (tabOption === "unstake") console.log(tabOption);
+    if (tabOption === "withdraw reward") console.log(tabOption);
   };
 
   return (
@@ -125,68 +116,48 @@ export const StakingTable = (props: { token: Token; tokens: Token[] }) => {
           <TableRow>
             <TableCell sx={{ width: { sm: "50%" }, verticalAlign: "top" }}>
               <Stack spacing={2.5}>
-                <Box component={Paper} p={2.5}>
-                  <Typography variant="body2">
-                    Your {token.name} Reward Balance:{" "}
-                    {token.stakerData.rewardBalance.toLocaleString("en-us")}
-                  </Typography>
-                  <TextField
-                    label="Amount"
-                    type="number"
-                    margin="normal"
-                    value={withrawRewardAmount}
-                    onChange={handleChangeWithrawRewardAmount}
-                    InputProps={{
-                      endAdornment: (
-                        <InputAdornment position="end">
-                          <Button onClick={handleMaxWithrawRewardAmount}>
-                            MAX
-                          </Button>
-                        </InputAdornment>
-                      ),
-                    }}
-                  />
-                  <br />
-                  {!walletIsConnected ? (
-                    <ConnectWallet />
-                  ) : (
-                    <Button
-                      variant="contained"
-                      size="large"
-                      color="secondary"
-                      onClick={handleWithrawReward}
-                    >
-                      Withdraw Reward
-                    </Button>
-                  )}
+                <Box component={Paper}>
+                  <Box
+                    px={2.5}
+                    py={1.5}
+                    sx={{ borderBottom: 1, borderColor: "divider" }}
+                  >
+                    <Typography variant="button">
+                      Your {token.name} Balances
+                    </Typography>
+                  </Box>
+                  <Box p={2.5}>
+                    <Typography variant="body2">
+                      Wallet Balance:{" "}
+                      {token.stakerData.walletBalance.toLocaleString("en-us")}{" "}
+                      {token.name}
+                    </Typography>
+                    <Typography variant="body2">
+                      Reward Balance:{" "}
+                      {token.stakerData.rewardBalance.toLocaleString("en-us")}{" "}
+                      {token.name}
+                    </Typography>
+                    <Typography variant="body2">
+                      Staking Balance:{" "}
+                      {token.stakerData.stakingBalance.toLocaleString("en-us")}{" "}
+                      {token.name}
+                    </Typography>
+                  </Box>
                 </Box>
                 <Box component={Paper}>
-                  <TabContext value={stakingOption}>
+                  <TabContext value={tabOption}>
                     <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
                       <TabList
-                        onChange={handleChangeStakingOption}
-                        aria-label="staking options"
+                        onChange={handleChangeTabOption}
+                        variant="scrollable"
+                        scrollButtons="auto"
                       >
                         <Tab label="Stake" value="stake" />
                         <Tab label="Unstake" value="unstake" />
+                        <Tab label="Withdraw Reward" value="withdraw reward" />
                       </TabList>
                     </Box>
-                    <TabPanel value={stakingOption}>
-                      <Typography variant="body2">
-                        Your Wallet Balance:{" "}
-                        {token.stakerData.walletBalance.toLocaleString("en-us")}{" "}
-                        {token.name}
-                      </Typography>
-                      <Typography variant="body2">
-                        Your Staking Balance:{" "}
-                        {token.stakerData.stakingBalance.toLocaleString(
-                          "en-us"
-                        )}{" "}
-                        {token.name}
-                      </Typography>
-                      <br />
-                      <Divider />
-                      <br />
+                    <TabPanel value={tabOption}>
                       <Typography variant="body2">
                         Stake Fee: {token.stakeFee.toLocaleString("en-us")}%
                       </Typography>
@@ -197,14 +168,12 @@ export const StakingTable = (props: { token: Token; tokens: Token[] }) => {
                         label="Amount"
                         type="number"
                         margin="normal"
-                        value={stakingAmount}
-                        onChange={handleChangeStakingAmount}
+                        value={tabAmount}
+                        onChange={handleChangeTabAmount}
                         InputProps={{
                           endAdornment: (
                             <InputAdornment position="end">
-                              <Button onClick={handleMaxStakingAmount}>
-                                MAX
-                              </Button>
+                              <Button onClick={handleMaxTabAmount}>MAX</Button>
                             </InputAdornment>
                           ),
                         }}
@@ -219,7 +188,7 @@ export const StakingTable = (props: { token: Token; tokens: Token[] }) => {
                           color="secondary"
                           onClick={handleStaking}
                         >
-                          {stakingOption}
+                          {tabOption}
                         </Button>
                       )}
                     </TabPanel>
