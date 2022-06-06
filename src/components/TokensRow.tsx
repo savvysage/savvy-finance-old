@@ -79,7 +79,8 @@ export const TokensRow = (props: { token: Token; tokens: Token[] }) => {
         <TableCell align="right">
           <Typography variant="subtitle2">Total Staked</Typography>
           <Typography noWrap>
-            {token.stakingBalance.toLocaleString("en-us")} {token.name}
+            {token.stakingBalance.toLocaleString("en-us")}{" "}
+            {token.category !== 1 ? token.name : token.name + " LP"}
           </Typography>
           <Typography variant="body2" noWrap>
             {(token.price * token.stakingBalance).toLocaleString("en-us")} USD
@@ -90,7 +91,7 @@ export const TokensRow = (props: { token: Token; tokens: Token[] }) => {
             <Typography variant="subtitle2">You Staked</Typography>
             <Typography noWrap>
               {token.stakerData.stakingBalance.toLocaleString("en-us")}{" "}
-              {token.name}
+              {token.category !== 1 ? token.name : token.name + " LP"}
             </Typography>
             <Typography variant="body2" noWrap>
               {(token.price * token.stakerData.stakingBalance).toLocaleString(
