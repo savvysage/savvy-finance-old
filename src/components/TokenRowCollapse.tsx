@@ -30,10 +30,6 @@ function Actions(props: { token: Token; tokens: Token[] }) {
   const { account: walletAddress } = useEthers();
   const walletIsConnected = walletAddress !== undefined;
 
-  token.stakerData.walletBalance = parseFloat(
-    formatEther(useTokenBalance(token.address, walletAddress) ?? 0)
-  );
-
   const [tabOption, setTabOption] = React.useState("stake");
   const handleChangeTabOption = (
     event: React.SyntheticEvent,
@@ -152,9 +148,13 @@ export const TokenRowCollapse = (props: { token: Token; tokens: Token[] }) => {
   const { account: walletAddress } = useEthers();
   const walletIsConnected = walletAddress !== undefined;
 
+  token.stakerData.walletBalance = parseFloat(
+    formatEther(useTokenBalance(token.address, walletAddress) ?? 0)
+  );
+
   return (
     <Box sx={{ margin: 1 }}>
-      <Table size="small" aria-label="staking">
+      <Table size="small" aria-label="token row collapse">
         <TableBody>
           <TableRow>
             <TableCell sx={{ width: { sm: "50%" }, verticalAlign: "top" }}>
