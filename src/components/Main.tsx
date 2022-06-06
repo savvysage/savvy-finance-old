@@ -14,7 +14,9 @@ export type Token = svfFarm.TokenData & {
 export const Main = () => {
   var isLoading = true;
 
-  const { account } = useEthers();
+  const { account: walletAddress } = useEthers();
+  const walletIsConnected = walletAddress !== undefined;
+
   const tokensAddresses: string[] = svfFarm.useTokens();
   const tokensData: svfFarm.TokenData[] =
     svfFarm.useTokensData(tokensAddresses);
@@ -27,7 +29,7 @@ export const Main = () => {
   const tokensStakerData: svfFarm.TokenStakerData[] =
     svfFarm.useTokensStakerData(
       tokensAddresses,
-      account ?? constants.AddressZero
+      walletAddress ?? constants.AddressZero
     );
 
   const tokens: Token[] = tokensJSON;
