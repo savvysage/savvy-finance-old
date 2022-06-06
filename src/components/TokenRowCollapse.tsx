@@ -73,7 +73,7 @@ function StakerStakingInfo(props: { token: Token; tokens: Token[] }) {
   );
 }
 
-export const StakingTable = (props: { token: Token; tokens: Token[] }) => {
+export const TokenRowCollapse = (props: { token: Token; tokens: Token[] }) => {
   const { token, tokens } = props;
   const { account: walletAddress } = useEthers();
   const walletIsConnected = walletAddress !== undefined;

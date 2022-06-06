@@ -10,7 +10,7 @@ import {
   TableRow,
 } from "@mui/material";
 import { Token } from "./Main";
-import { TokensRow } from "./TokensRow";
+import { TokenRow } from "./TokenRow";
 
 type Order = "asc" | "desc";
 interface TokenSort {
@@ -103,7 +103,7 @@ export const TokensTable = (props: { tokens: Token[] }) => {
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((token) => {
                 return (
-                  <TokensRow key={token.name} token={token} tokens={tokens} />
+                  <TokenRow key={token.name} token={token} tokens={tokens} />
                 );
               })}
             {emptyRows > 0 && (

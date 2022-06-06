@@ -14,9 +14,9 @@ import {
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import { Token } from "./Main";
-import { StakingTable } from "./StakingTable";
+import { TokenRowCollapse } from "./TokenRowCollapse";
 
-export const TokensRow = (props: { token: Token; tokens: Token[] }) => {
+export const TokenRow = (props: { token: Token; tokens: Token[] }) => {
   const { token, tokens } = props;
 
   const [open, setOpen] = React.useState(false);
@@ -35,6 +35,15 @@ export const TokensRow = (props: { token: Token; tokens: Token[] }) => {
         }}
         onClick={() => setOpen(!open)}
       >
+        <TableCell>
+          <IconButton
+            aria-label="expand row"
+            size="small"
+            onClick={() => setOpen(!open)}
+          >
+            {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+          </IconButton>
+        </TableCell>
         <TableCell component="th" scope="row">
           <Stack direction="row" alignItems="center" spacing={1}>
             {token.category === 0 ? (
@@ -77,6 +86,10 @@ export const TokensRow = (props: { token: Token; tokens: Token[] }) => {
           </Typography>
         </TableCell>
         <TableCell align="right">
+          <Typography variant="subtitle2">APR</Typography>
+          <Typography>{token.stakingApr.toLocaleString("en-us")}%</Typography>
+        </TableCell>
+        <TableCell align="right">
           <Typography variant="subtitle2">Total Staked</Typography>
           <Typography noWrap>
             {token.stakingBalance.toLocaleString("en-us")}{" "}
@@ -101,24 +114,11 @@ export const TokensRow = (props: { token: Token; tokens: Token[] }) => {
             </Typography>
           </Box>
         </TableCell>
-        <TableCell align="right">
-          <Typography variant="subtitle2">APR</Typography>
-          <Typography>{token.stakingApr.toLocaleString("en-us")}%</Typography>
-        </TableCell>
-        <TableCell>
-          <IconButton
-            aria-label="expand row"
-            size="small"
-            onClick={() => setOpen(!open)}
-          >
-            {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-          </IconButton>
-        </TableCell>
       </TableRow>
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={5}>
           <Collapse in={open} timeout="auto" unmountOnExit>
-            <StakingTable token={token} tokens={tokens} />
+            <TokenRowCollapse token={token} tokens={tokens} />
           </Collapse>
         </TableCell>
       </TableRow>
