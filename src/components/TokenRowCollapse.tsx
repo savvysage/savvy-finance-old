@@ -165,9 +165,7 @@ export const TokenRowCollapse = (props: { token: Token; tokens: Token[] }) => {
                     py={1.5}
                     sx={{ borderBottom: 1, borderColor: "divider" }}
                   >
-                    <Typography variant="button">
-                      Your {token.name} Balances
-                    </Typography>
+                    <Typography variant="button">Your Balances</Typography>
                   </Box>
                   <Box p={2.5}>
                     <Typography variant="body2">
@@ -176,16 +174,28 @@ export const TokenRowCollapse = (props: { token: Token; tokens: Token[] }) => {
                       {token.name}
                     </Typography>
                     <Typography variant="body2">
-                      Reward Balance:{" "}
-                      {token.stakerData.rewardBalance.toLocaleString("en-us")}{" "}
-                      {token.name}
-                    </Typography>
-                    <Typography variant="body2">
                       Staking Balance:{" "}
                       {token.stakerData.stakingBalance.toLocaleString("en-us")}{" "}
                       {token.name}
                     </Typography>
+                    <Typography variant="body2">
+                      Reward Balance:{" "}
+                      {token.stakerData.rewardBalance.toLocaleString("en-us")}{" "}
+                      {token.name}
+                    </Typography>
                   </Box>
+                </Box>
+                <Box component={Paper}>
+                  <Box
+                    px={2.5}
+                    py={1.5}
+                    sx={{ borderBottom: 1, borderColor: "divider" }}
+                  >
+                    <Typography variant="button">
+                      Your Staking Reward History
+                    </Typography>
+                  </Box>
+                  <Box p={2.5}></Box>
                 </Box>
                 <Box display={{ xs: "block", sm: "none" }}>
                   <Actions token={token} tokens={tokens} />
