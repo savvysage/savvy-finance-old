@@ -6,7 +6,9 @@ export const ConnectWallet = (props: {
   size?: "small" | "medium" | "large" | undefined;
 }) => {
   const { size } = props;
-  const { activateBrowserWallet } = useEthers();
+  const { account: walletAddress, activateBrowserWallet } = useEthers();
+  const walletIsConnected = walletAddress !== undefined;
+
   return (
     <Button
       variant="contained"
