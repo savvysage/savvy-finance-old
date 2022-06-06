@@ -35,7 +35,7 @@ export const TokenRow = (props: { token: Token; tokens: Token[] }) => {
         }}
         onClick={() => setOpen(!open)}
       >
-        <TableCell>
+        <TableCell width={1}>
           <IconButton
             aria-label="expand row"
             size="small"
@@ -85,11 +85,11 @@ export const TokenRow = (props: { token: Token; tokens: Token[] }) => {
             more.
           </Typography>
         </TableCell>
-        <TableCell align="right">
+        <TableCell>
           <Typography variant="subtitle2">APR</Typography>
           <Typography>{token.stakingApr.toLocaleString("en-us")}%</Typography>
         </TableCell>
-        <TableCell align="right">
+        <TableCell>
           <Typography variant="subtitle2">Total Staked</Typography>
           <Typography noWrap>
             {token.stakingBalance.toLocaleString("en-us")}{" "}
@@ -99,7 +99,7 @@ export const TokenRow = (props: { token: Token; tokens: Token[] }) => {
             {(token.price * token.stakingBalance).toLocaleString("en-us")} USD
           </Typography>
         </TableCell>
-        <TableCell align="right">
+        <TableCell>
           <Box display={{ xs: "none", sm: "block" }}>
             <Typography variant="subtitle2">You Staked</Typography>
             <Typography noWrap>
