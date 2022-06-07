@@ -23,6 +23,7 @@ import {
 } from "@mui/material";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 import { Token } from "./Main";
+import { StakingRewardsTable } from "./StakingRewardsTable";
 import { ConnectWallet } from "./ConnectWallet";
 
 function Actions(props: { token: Token; tokens: Token[] }) {
@@ -157,7 +158,7 @@ export const TokenRowCollapse = (props: { token: Token; tokens: Token[] }) => {
       <Table size="small" aria-label="token row collapse">
         <TableBody>
           <TableRow>
-            <TableCell sx={{ width: { sm: "50%" }, verticalAlign: "top" }}>
+            <TableCell sx={{ maxWidth: { sm: "10rem" }, verticalAlign: "top" }}>
               <Stack spacing={2.5}>
                 <Box component={Paper}>
                   <Box
@@ -195,14 +196,16 @@ export const TokenRowCollapse = (props: { token: Token; tokens: Token[] }) => {
                       Your Staking Reward History
                     </Typography>
                   </Box>
-                  <Box p={2.5}></Box>
+                  <Box p={2.5}>
+                    <StakingRewardsTable token={token} tokens={tokens} />
+                  </Box>
                 </Box>
                 <Box display={{ xs: "block", sm: "none" }}>
                   <Actions token={token} tokens={tokens} />
                 </Box>
               </Stack>
             </TableCell>
-            <TableCell sx={{ width: { sm: "50%" }, verticalAlign: "top" }}>
+            <TableCell sx={{ maxWidth: { sm: "10rem" }, verticalAlign: "top" }}>
               <Box display={{ xs: "none", sm: "block" }}>
                 <Actions token={token} tokens={tokens} />
               </Box>
