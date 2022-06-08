@@ -57,8 +57,11 @@ function stableSort<T>(
   return stabilizedThis.map((el) => el[0]);
 }
 
-export const TokensTable = (props: { tokens: Token[] }) => {
-  const { tokens } = props;
+export const TokensTable = (props: {
+  tokens: Token[];
+  tokensAreUpdated: boolean;
+}) => {
+  const { tokens, tokensAreUpdated } = props;
 
   const [order, setOrder] = React.useState<Order>("asc");
   const [orderBy, setOrderBy] = React.useState<keyof TokenSort>("category");
@@ -103,7 +106,12 @@ export const TokensTable = (props: { tokens: Token[] }) => {
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((token) => {
                 return (
-                  <TokenRow key={token.name} token={token} tokens={tokens} />
+                  <TokenRow
+                    key={token.name}
+                    token={token}
+                    tokens={tokens}
+                    tokensAreUpdated={tokensAreUpdated}
+                  />
                 );
               })}
             {emptyRows > 0 && (

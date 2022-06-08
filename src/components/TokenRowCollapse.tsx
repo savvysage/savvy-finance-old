@@ -1,10 +1,11 @@
-import React from "react";
-import { useEthers, useTokenBalance } from "@usedapp/core";
+import React, { useEffect } from "react";
+import { useContractFunction, useEthers, useTokenBalance } from "@usedapp/core";
 import { constants } from "ethers";
-import { formatEther } from "ethers/lib/utils";
+import { formatEther, parseEther } from "ethers/lib/utils";
 import {
   Box,
   Button,
+  CircularProgress,
   FormControl,
   InputAdornment,
   InputLabel,
@@ -25,11 +26,30 @@ import { TabContext, TabList, TabPanel } from "@mui/lab";
 import { Token } from "./Main";
 import { StakingRewardsTable } from "./StakingRewardsTable";
 import { ConnectWallet } from "./ConnectWallet";
+import { useContract, useTokenContract } from "../hooks/savvy_finance_farm";
 
-function Actions(props: { token: Token; tokens: Token[] }) {
-  const { token, tokens } = props;
+function Actions(props: {
+  token: Token;
+  tokens: Token[];
+  tokensAreUpdated: boolean;
+}) {
+  const { token, tokens, tokensAreUpdated } = props;
   const { account: walletAddress } = useEthers();
   const walletIsConnected = walletAddress !== undefined;
+
+  const svfFarmContract = useContract();
+  const { state: setStakingRewardTokenState, send: setStakingRewardTokenSend } =
+    useContractFunction(svfFarmContract, "setStakingRewardToken", {
+      transactionName: "Set Staking Reward Token",
+    });
+
+  const tokenContract = useTokenContract(token.address);
+  const { state: tokenApproveState, send: tokenApproveSend } =
+    useContractFunction(tokenContract, "approve", {
+      transactionName: "Approve Token",
+    });
+  // const tokenApprove = (amount: string) =>
+  //   tokenApproveSend(svfFarmContract.address, parseEther(amount));
 
   const [tabOption, setTabOption] = React.useState("stake");
   const handleChangeTabOption = (
@@ -59,9 +79,28 @@ function Actions(props: { token: Token; tokens: Token[] }) {
     if (tabOption === "withdraw reward") console.log(tabOption);
   };
 
+  const [stakingRewardToken, setStakingRewardToken] = React.useState(
+    token.stakerData.stakingRewardToken !== constants.AddressZero
+      ? token.stakerData.stakingRewardToken
+      : token.rewardToken
+  );
   const handleChangeStakingRewardToken = (event: SelectChangeEvent) => {
-    console.log(event.target.value);
+    const rewardTokenAddress = event.target.value;
+    setStakingRewardToken(rewardTokenAddress);
+
+    const setStakingRewardTokenSendResult = () =>
+      setStakingRewardTokenSend(token.address, rewardTokenAddress);
+
+    console.log(setStakingRewardTokenSendResult());
   };
+  useEffect(() => {
+    if (tokensAreUpdated)
+      setStakingRewardToken(
+        token.stakerData.stakingRewardToken !== constants.AddressZero
+          ? token.stakerData.stakingRewardToken
+          : token.rewardToken
+      );
+  }, [tokensAreUpdated]);
 
   return (
     <Stack spacing={2.5}>
@@ -120,15 +159,16 @@ function Actions(props: { token: Token; tokens: Token[] }) {
           <Typography variant="button">Change Reward Token</Typography>
         </Box>
         <Box p={2.5}>
+          {/* {!tokensAreUpdated ? (
+            <Box sx={{ display: "flex", justifyContent: "center" }}>
+              <CircularProgress />
+            </Box>
+          ) : ( */}
           <FormControl fullWidth>
             <InputLabel>Reward Token</InputLabel>
             <Select
               label="Reward Token"
-              defaultValue={
-                token.stakerData.stakingRewardToken !== constants.AddressZero
-                  ? token.stakerData.stakingRewardToken
-                  : token.rewardToken
-              }
+              value={stakingRewardToken}
               onChange={handleChangeStakingRewardToken}
             >
               {tokens.map((token) => (
@@ -138,14 +178,19 @@ function Actions(props: { token: Token; tokens: Token[] }) {
               ))}
             </Select>
           </FormControl>
+          {/* )} */}
         </Box>
       </Box>
     </Stack>
   );
 }
 
-export const TokenRowCollapse = (props: { token: Token; tokens: Token[] }) => {
-  const { token, tokens } = props;
+export const TokenRowCollapse = (props: {
+  token: Token;
+  tokens: Token[];
+  tokensAreUpdated: boolean;
+}) => {
+  const { token, tokens, tokensAreUpdated } = props;
   const { account: walletAddress } = useEthers();
   const walletIsConnected = walletAddress !== undefined;
 
@@ -157,8 +202,8 @@ export const TokenRowCollapse = (props: { token: Token; tokens: Token[] }) => {
     <Box sx={{ margin: 1 }}>
       <Table size="small" aria-label="token row collapse">
         <TableBody>
-          <TableRow>
-            <TableCell sx={{ maxWidth: "10rem", verticalAlign: "top" }}>
+          <TableRow sx={{ textAlign: "center", verticalAlign: "top" }}>
+            <TableCell sx={{ maxWidth: "10rem" }}>
               <Stack spacing={2.5}>
                 <Box component={Paper}>
                   <Box
@@ -193,7 +238,7 @@ export const TokenRowCollapse = (props: { token: Token; tokens: Token[] }) => {
                     sx={{ borderBottom: 1, borderColor: "divider" }}
                   >
                     <Typography variant="button">
-                      Your Staking Reward History
+                      Your Staking Rewards History
                     </Typography>
                   </Box>
                   <Box p={2.5}>
@@ -201,13 +246,21 @@ export const TokenRowCollapse = (props: { token: Token; tokens: Token[] }) => {
                   </Box>
                 </Box>
                 <Box display={{ xs: "block", sm: "none" }}>
-                  <Actions token={token} tokens={tokens} />
+                  <Actions
+                    token={token}
+                    tokens={tokens}
+                    tokensAreUpdated={tokensAreUpdated}
+                  />
                 </Box>
               </Stack>
             </TableCell>
-            <TableCell sx={{ maxWidth: "10rem", verticalAlign: "top" }}>
+            <TableCell sx={{ maxWidth: "10rem" }}>
               <Box display={{ xs: "none", sm: "block" }}>
-                <Actions token={token} tokens={tokens} />
+                <Actions
+                  token={token}
+                  tokens={tokens}
+                  tokensAreUpdated={tokensAreUpdated}
+                />
               </Box>
             </TableCell>
           </TableRow>

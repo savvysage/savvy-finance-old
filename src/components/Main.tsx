@@ -12,7 +12,7 @@ export type Token = svfFarm.TokenData & {
 };
 
 export const Main = () => {
-  var isLoading = true;
+  var tokensAreUpdated = false;
 
   const { account: walletAddress } = useEthers();
   const walletIsConnected = walletAddress !== undefined;
@@ -74,20 +74,20 @@ export const Main = () => {
           stakerData: tokensStakerData[index],
         };
       });
-      isLoading = false;
+      tokensAreUpdated = true;
     }
 
   return (
     <>
-      {isLoading ? (
-        <Box sx={{ display: "inline-flex", justifyContent: "center" }}>
+      {!tokensAreUpdated ? (
+        <Box sx={{ display: "flex", justifyContent: "center" }}>
           <CircularProgress />
         </Box>
       ) : (
         ""
       )}
       <Stack spacing={2}>
-        <TokensTable tokens={tokens} />
+        <TokensTable tokens={tokens} tokensAreUpdated={tokensAreUpdated} />
       </Stack>
     </>
   );

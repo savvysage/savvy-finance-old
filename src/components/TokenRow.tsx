@@ -17,8 +17,12 @@ import { Token } from "./Main";
 import { TokenRowCollapse } from "./TokenRowCollapse";
 import { numberFormatter } from "../common";
 
-export const TokenRow = (props: { token: Token; tokens: Token[] }) => {
-  const { token, tokens } = props;
+export const TokenRow = (props: {
+  token: Token;
+  tokens: Token[];
+  tokensAreUpdated: boolean;
+}) => {
+  const { token, tokens, tokensAreUpdated } = props;
 
   const [open, setOpen] = React.useState(false);
   const SmallAvatar = styled(Avatar)(({ theme }) => ({
@@ -119,7 +123,11 @@ export const TokenRow = (props: { token: Token; tokens: Token[] }) => {
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={5}>
           <Collapse in={open} timeout="auto" unmountOnExit>
-            <TokenRowCollapse token={token} tokens={tokens} />
+            <TokenRowCollapse
+              token={token}
+              tokens={tokens}
+              tokensAreUpdated={tokensAreUpdated}
+            />
           </Collapse>
         </TableCell>
       </TableRow>

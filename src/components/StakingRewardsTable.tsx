@@ -22,7 +22,7 @@ export const StakingRewardsTable = (props: {
   const walletIsConnected = walletAddress !== undefined;
 
   return (
-    <TableContainer component={Paper}>
+    <TableContainer component={Paper} sx={{ maxHeight: "25rem" }}>
       <Table size="small" aria-label="staking rewards table">
         <TableHead>
           <TableRow>

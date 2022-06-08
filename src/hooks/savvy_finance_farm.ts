@@ -1,4 +1,4 @@
-import { useCall, useCalls, useEthers } from "@usedapp/core";
+import { ERC20Interface, useCall, useCalls, useEthers } from "@usedapp/core";
 import { constants, Contract, utils } from "ethers";
 import { formatEther } from "ethers/lib/utils";
 import { useState } from "react";
@@ -61,6 +61,10 @@ export const useContract = (): Contract => {
   const svfFarmInterface = new utils.Interface(SavvyFinanceFarm.abi);
 
   return new Contract(svfFarmAddress, svfFarmInterface);
+};
+
+export const useTokenContract = (tokensAddress: string): Contract => {
+  return new Contract(tokensAddress, ERC20Interface);
 };
 
 export const useTokens = (): string[] => {
