@@ -1,3 +1,4 @@
+import moment from "moment";
 import { useEthers } from "@usedapp/core";
 import {
   Paper,
@@ -10,7 +11,7 @@ import {
   Typography,
 } from "@mui/material";
 import { Token } from "./Main";
-import moment from "moment";
+import { numberFormatter } from "../common";
 
 export const StakingRewardsTable = (props: {
   token: Token;
@@ -19,11 +20,6 @@ export const StakingRewardsTable = (props: {
   const { token, tokens } = props;
   const { account: walletAddress } = useEthers();
   const walletIsConnected = walletAddress !== undefined;
-
-  const numberFormatter = Intl.NumberFormat("en", {
-    notation: "compact",
-    // maximumFractionDigits: 2,
-  });
 
   return (
     <TableContainer component={Paper}>

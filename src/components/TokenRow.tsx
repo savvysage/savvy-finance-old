@@ -15,6 +15,7 @@ import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import { Token } from "./Main";
 import { TokenRowCollapse } from "./TokenRowCollapse";
+import { numberFormatter } from "../common";
 
 export const TokenRow = (props: { token: Token; tokens: Token[] }) => {
   const { token, tokens } = props;
@@ -87,28 +88,28 @@ export const TokenRow = (props: { token: Token; tokens: Token[] }) => {
         </TableCell>
         <TableCell>
           <Typography variant="subtitle2">APR</Typography>
-          <Typography>{token.stakingApr.toLocaleString("en-us")}%</Typography>
+          <Typography>{token.stakingApr}%</Typography>
         </TableCell>
         <TableCell>
           <Typography variant="subtitle2">Total Staked</Typography>
           <Typography noWrap>
-            {token.stakingBalance.toLocaleString("en-us")}{" "}
+            {numberFormatter.format(token.stakingBalance)}{" "}
             {token.category !== 1 ? token.name : token.name + " LP"}
           </Typography>
           <Typography variant="body2" noWrap>
-            {(token.price * token.stakingBalance).toLocaleString("en-us")} USD
+            {numberFormatter.format(token.price * token.stakingBalance)} USD
           </Typography>
         </TableCell>
         <TableCell>
           <Box display={{ xs: "none", sm: "block" }}>
             <Typography variant="subtitle2">You Staked</Typography>
             <Typography noWrap>
-              {token.stakerData.stakingBalance.toLocaleString("en-us")}{" "}
+              {numberFormatter.format(token.stakerData.stakingBalance)}{" "}
               {token.category !== 1 ? token.name : token.name + " LP"}
             </Typography>
             <Typography variant="body2" noWrap>
-              {(token.price * token.stakerData.stakingBalance).toLocaleString(
-                "en-us"
+              {numberFormatter.format(
+                token.price * token.stakerData.stakingBalance
               )}{" "}
               USD
             </Typography>

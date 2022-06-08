@@ -158,7 +158,7 @@ export const TokenRowCollapse = (props: { token: Token; tokens: Token[] }) => {
       <Table size="small" aria-label="token row collapse">
         <TableBody>
           <TableRow>
-            <TableCell sx={{ maxWidth: { sm: "10rem" }, verticalAlign: "top" }}>
+            <TableCell sx={{ maxWidth: "10rem", verticalAlign: "top" }}>
               <Stack spacing={2.5}>
                 <Box component={Paper}>
                   <Box
@@ -205,7 +205,7 @@ export const TokenRowCollapse = (props: { token: Token; tokens: Token[] }) => {
                 </Box>
               </Stack>
             </TableCell>
-            <TableCell sx={{ maxWidth: { sm: "10rem" }, verticalAlign: "top" }}>
+            <TableCell sx={{ maxWidth: "10rem", verticalAlign: "top" }}>
               <Box display={{ xs: "none", sm: "block" }}>
                 <Actions token={token} tokens={tokens} />
               </Box>
