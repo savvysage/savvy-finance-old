@@ -63,8 +63,8 @@ export const useContract = (): Contract => {
   return new Contract(svfFarmAddress, svfFarmInterface);
 };
 
-export const useTokenContract = (tokensAddress: string): Contract => {
-  return new Contract(tokensAddress, ERC20Interface);
+export const useTokenContract = (tokenAddress: string): Contract => {
+  return new Contract(tokenAddress, ERC20Interface);
 };
 
 export const useTokens = (): string[] => {
