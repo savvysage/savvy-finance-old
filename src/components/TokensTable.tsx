@@ -104,16 +104,14 @@ export const TokensTable = (props: {
                 tokens.slice().sort(getComparator(order, orderBy)) */}
             {stableSort(tokens, getComparator(order, orderBy))
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((token) => {
-                return (
-                  <TokenRow
-                    key={token.name}
-                    token={token}
-                    tokens={tokens}
-                    tokensAreUpdated={tokensAreUpdated}
-                  />
-                );
-              })}
+              .map((token, tokenIndex) => (
+                <TokenRow
+                  key={tokenIndex}
+                  tokenIndex={tokenIndex}
+                  tokens={tokens}
+                  tokensAreUpdated={tokensAreUpdated}
+                />
+              ))}
             {emptyRows > 0 && (
               <TableRow
                 style={{

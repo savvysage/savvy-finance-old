@@ -12,27 +12,31 @@ export type Token = svfFarm.TokenData & {
 };
 
 export const Main = () => {
+  var tokens: Token[] = tokensJSON;
   var tokensAreUpdated = false;
 
+  // localStorage.removeItem("tokens");
+  if (!localStorage.getItem("tokens"))
+    localStorage.setItem("tokens", JSON.stringify(tokens));
+  else
+    try {
+      tokens = JSON.parse(localStorage.getItem("tokens") ?? "[]");
+    } catch (error) {
+      console.error(error);
+    }
+
   const { account: walletAddress } = useEthers();
-  const walletIsConnected = walletAddress !== undefined;
+  // const walletIsConnected = walletAddress !== undefined;
 
   const tokensAddresses: string[] = svfFarm.useTokens();
   const tokensData: svfFarm.TokenData[] =
     svfFarm.useTokensData(tokensAddresses);
-  // const tokensMainnetAddresses = tokensData.map((tokenData) =>
-  //   getContractAddress(tokenData?.name?.toLowerCase() + "_token", "bsc-main")
-  // );
-  // const tokensPrices: number[] = svfFarm.useTokensPrices(
-  //   tokensMainnetAddresses
-  // );
   const tokensStakerData: svfFarm.TokenStakerData[] =
     svfFarm.useTokensStakerData(
       tokensAddresses,
       walletAddress ?? constants.AddressZero
     );
 
-  const tokens: Token[] = tokensJSON;
   if (tokensAddresses.length !== 0)
     if (
       tokensData.length === tokensAddresses.length &&
@@ -75,6 +79,7 @@ export const Main = () => {
         };
       });
       tokensAreUpdated = true;
+      localStorage.setItem("tokens", JSON.stringify(tokens));
     }
 
   return (

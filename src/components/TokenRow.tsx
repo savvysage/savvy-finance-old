@@ -1,4 +1,6 @@
 import React from "react";
+import { useEthers, useTokenBalance } from "@usedapp/core";
+import { formatEther } from "ethers/lib/utils";
 import { Box } from "@mui/system";
 import {
   Avatar,
@@ -15,14 +17,29 @@ import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import { Token } from "./Main";
 import { TokenRowCollapse } from "./TokenRowCollapse";
-import { numberFormatter } from "../common";
+import { getContractAddress, numberFormatter } from "../common";
+import { useTokensPrices } from "../hooks/savvy_finance_farm";
 
 export const TokenRow = (props: {
-  token: Token;
+  tokenIndex: number;
   tokens: Token[];
   tokensAreUpdated: boolean;
 }) => {
-  const { token, tokens, tokensAreUpdated } = props;
+  const { tokenIndex, tokens, tokensAreUpdated } = props;
+  const { account: walletAddress } = useEthers();
+  // const walletIsConnected = walletAddress !== undefined;
+
+  // tokens[tokenIndex].price = useTokensPrices([
+  //   getContractAddress(
+  //     tokens[tokenIndex].name.toLowerCase() + "_token",
+  //     "bsc-main"
+  //   ),
+  // ])[0];
+  tokens[tokenIndex].stakerData.walletBalance = parseFloat(
+    formatEther(useTokenBalance(tokens[tokenIndex].address, walletAddress) ?? 0)
+  );
+
+  const token = tokens[tokenIndex];
 
   const [open, setOpen] = React.useState(false);
   const SmallAvatar = styled(Avatar)(({ theme }) => ({
@@ -124,7 +141,7 @@ export const TokenRow = (props: {
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={5}>
           <Collapse in={open} timeout="auto" unmountOnExit>
             <TokenRowCollapse
-              token={token}
+              tokenIndex={tokenIndex}
               tokens={tokens}
               tokensAreUpdated={tokensAreUpdated}
             />

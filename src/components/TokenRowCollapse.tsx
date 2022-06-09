@@ -1,11 +1,11 @@
 import React, { useEffect } from "react";
-import { useContractFunction, useEthers, useTokenBalance } from "@usedapp/core";
+import { useContractFunction, useEthers } from "@usedapp/core";
 import { constants } from "ethers";
-import { formatEther, parseEther } from "ethers/lib/utils";
+import { parseEther } from "ethers/lib/utils";
 import {
   Box,
   Button,
-  CircularProgress,
+  // CircularProgress,
   FormControl,
   InputAdornment,
   InputLabel,
@@ -29,11 +29,13 @@ import { ConnectWallet } from "./ConnectWallet";
 import { useContract, useTokenContract } from "../hooks/savvy_finance_farm";
 
 function Actions(props: {
-  token: Token;
+  tokenIndex: number;
   tokens: Token[];
   tokensAreUpdated: boolean;
 }) {
-  const { token, tokens, tokensAreUpdated } = props;
+  const { tokenIndex, tokens, tokensAreUpdated } = props;
+  const token = tokens[tokenIndex];
+
   const { account: walletAddress } = useEthers();
   const walletIsConnected = walletAddress !== undefined;
 
@@ -88,10 +90,12 @@ function Actions(props: {
     const rewardTokenAddress = event.target.value;
     setStakingRewardToken(rewardTokenAddress);
 
-    const setStakingRewardTokenSendResult = () =>
-      setStakingRewardTokenSend(token.address, rewardTokenAddress);
+    if (walletIsConnected) {
+      const setStakingRewardTokenSendResult = () =>
+        setStakingRewardTokenSend(token.address, rewardTokenAddress);
 
-    console.log(setStakingRewardTokenSendResult());
+      console.log(setStakingRewardTokenSendResult());
+    }
   };
   useEffect(() => {
     if (tokensAreUpdated)
@@ -186,17 +190,15 @@ function Actions(props: {
 }
 
 export const TokenRowCollapse = (props: {
-  token: Token;
+  tokenIndex: number;
   tokens: Token[];
   tokensAreUpdated: boolean;
 }) => {
-  const { token, tokens, tokensAreUpdated } = props;
-  const { account: walletAddress } = useEthers();
-  const walletIsConnected = walletAddress !== undefined;
+  const { tokenIndex, tokens, tokensAreUpdated } = props;
+  const token = tokens[tokenIndex];
 
-  token.stakerData.walletBalance = parseFloat(
-    formatEther(useTokenBalance(token.address, walletAddress) ?? 0)
-  );
+  // const { account: walletAddress } = useEthers();
+  // const walletIsConnected = walletAddress !== undefined;
 
   return (
     <Box sx={{ margin: 1 }}>
@@ -247,7 +249,7 @@ export const TokenRowCollapse = (props: {
                 </Box>
                 <Box display={{ xs: "block", sm: "none" }}>
                   <Actions
-                    token={token}
+                    tokenIndex={tokenIndex}
                     tokens={tokens}
                     tokensAreUpdated={tokensAreUpdated}
                   />
@@ -257,7 +259,7 @@ export const TokenRowCollapse = (props: {
             <TableCell sx={{ maxWidth: "10rem" }}>
               <Box display={{ xs: "none", sm: "block" }}>
                 <Actions
-                  token={token}
+                  tokenIndex={tokenIndex}
                   tokens={tokens}
                   tokensAreUpdated={tokensAreUpdated}
                 />
