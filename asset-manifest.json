@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/savvy-finance/static/css/main.d33dd536.css",
-    "main.js": "/savvy-finance/static/js/main.ab168392.js",
+    "main.js": "/savvy-finance/static/js/main.0c7f6e4d.js",
     "static/js/787.22edae46.chunk.js": "/savvy-finance/static/js/787.22edae46.chunk.js",
     "index.html": "/savvy-finance/index.html",
     "main.d33dd536.css.map": "/savvy-finance/static/css/main.d33dd536.css.map",
-    "main.ab168392.js.map": "/savvy-finance/static/js/main.ab168392.js.map",
+    "main.0c7f6e4d.js.map": "/savvy-finance/static/js/main.0c7f6e4d.js.map",
     "787.22edae46.chunk.js.map": "/savvy-finance/static/js/787.22edae46.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.d33dd536.css",
-    "static/js/main.ab168392.js"
+    "static/js/main.0c7f6e4d.js"
   ]
 }
