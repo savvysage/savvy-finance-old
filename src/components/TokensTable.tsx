@@ -11,6 +11,7 @@ import {
 } from "@mui/material";
 import { Token } from "./Main";
 import { TokenRow } from "./TokenRow";
+import { AddToken } from "./AddToken";
 
 type Order = "asc" | "desc";
 interface TokenSort {
@@ -94,6 +95,8 @@ export const TokensTable = (props: {
 
   return (
     <Box component={Paper} mx={{ md: "10%" }}>
+      <AddToken />
+      <br />
       <TableContainer>
         <Table aria-label="tokens table" size="small">
           <TableBody>

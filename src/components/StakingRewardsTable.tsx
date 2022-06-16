@@ -78,7 +78,7 @@ export const StakingRewardsTable = (props: {
                 </TableCell>
                 <TableCell align="right">
                   <Typography noWrap>
-                    {stakingReward.stakingDurationInSeconds}secs
+                    {stakingReward.stakingDurationInSeconds} secs
                   </Typography>
                 </TableCell>
                 <TableCell align="right">
