@@ -32,7 +32,7 @@
       }
     },
     "bsc-main": {
-      "verify": false,
+      "verify": true,
       "key_hash": "0xc251acd21ec4fb7f31bb8868288bfdbaeb4fbfec2df3735ddbd4f7dc8d60103c",
       "fee": 200000000000000000,
       "contracts": {
@@ -46,7 +46,7 @@
       }
     },
     "bsc-test": {
-      "verify": false,
+      "verify": true,
       "key_hash": "0xcaf3c3727e033261d383b315559476f48034c13b18f8cafed4d871abe5049186",
       "fee": 100000000000000000,
       "contracts": {

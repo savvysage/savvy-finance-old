@@ -17,7 +17,7 @@ function App() {
             "https://bsc-dataseed.binance.org/"
           ),
           [BSCTestnet.chainId]: getDefaultProvider(
-            "https://data-seed-prebsc-1-s1.binance.org:8545/"
+            "https://data-seed-prebsc-1-s3.binance.org:8545/"
           ),
         },
       }}

@@ -74,7 +74,7 @@ export const StakingRewardsTable = (props: {
                   </Typography>
                 </TableCell>
                 <TableCell align="right">
-                  <Typography noWrap>{token.stakingApr}%</Typography>
+                  <Typography noWrap>{stakingReward.stakingApr}%</Typography>
                 </TableCell>
                 <TableCell align="right">
                   <Typography noWrap>
@@ -83,8 +83,8 @@ export const StakingRewardsTable = (props: {
                 </TableCell>
                 <TableCell align="right">
                   <Typography noWrap>
-                    {stakingReward.actionPerformed[0]}{" "}
-                    {stakingReward.actionPerformed[1]}
+                    {stakingReward.triggeredBy[0]}{" "}
+                    {stakingReward.triggeredBy[1]}
                   </Typography>
                 </TableCell>
                 <TableCell align="right">

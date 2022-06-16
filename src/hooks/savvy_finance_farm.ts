@@ -12,17 +12,22 @@ import SavvyFinanceFarm from "../back_end_build/contracts/SavvyFinanceFarm.json"
 export type TokenData = {
   address: string;
   isActive: boolean;
-  hasMultiReward: boolean;
+  isVerified: boolean;
+  hasMultiTokenRewards: boolean;
   name: string;
   category: number;
   price: number;
   rewardBalance: number;
   stakingBalance: number;
-  stakeFee: number;
-  unstakeFee: number;
   stakingApr: number;
   rewardToken: string;
   admin: string;
+  devDepositFee: number;
+  devWithdrawFee: number;
+  devStakeFee: number;
+  devUnstakeFee: number;
+  adminStakeFee: number;
+  adminUnstakeFee: number;
   timestampAdded: number;
   timestampLastUpdated: number;
 };
@@ -35,14 +40,15 @@ export type TokenStakerData = {
   stakingRewards: {
     id: number;
     staker: string;
-    stakedToken: string;
-    stakedTokenPrice: number;
-    stakedTokenAmount: number;
     rewardToken: string;
     rewardTokenPrice: number;
     rewardTokenAmount: number;
+    stakedToken: string;
+    stakedTokenPrice: number;
+    stakedTokenAmount: number;
+    stakingApr: number;
     stakingDurationInSeconds: number;
-    actionPerformed: string[2];
+    triggeredBy: string[2];
     timestampAdded: number;
     timestampLastUpdated: number;
   }[];
@@ -101,7 +107,8 @@ export const useTokensData = (tokensAddresses: string[]): TokenData[] | [] => {
       // console.log(result.value[0]);
       const address = calls[index]["args"][0];
       const isActive = result.value[0]["isActive"];
-      const hasMultiReward = result.value[0]["hasMultiReward"];
+      const isVerified = result.value[0]["isVerified"];
+      const hasMultiTokenRewards = result.value[0]["hasMultiTokenRewards"];
       const name = result.value[0]["name"];
       const category = parseInt(result.value[0]["category"]);
       const price = parseFloat(formatEther(result.value[0]["price"]));
@@ -111,11 +118,27 @@ export const useTokensData = (tokensAddresses: string[]): TokenData[] | [] => {
       const stakingBalance = parseFloat(
         formatEther(result.value[0]["stakingBalance"])
       );
-      const stakeFee = parseFloat(formatEther(result.value[0]["stakeFee"]));
-      const unstakeFee = parseFloat(formatEther(result.value[0]["unstakeFee"]));
       const stakingApr = parseFloat(formatEther(result.value[0]["stakingApr"]));
       const rewardToken = result.value[0]["rewardToken"];
       const admin = result.value[0]["admin"];
+      const devDepositFee = parseFloat(
+        formatEther(result.value[0]["fees"]["devDepositFee"])
+      );
+      const devWithdrawFee = parseFloat(
+        formatEther(result.value[0]["fees"]["devWithdrawFee"])
+      );
+      const devStakeFee = parseFloat(
+        formatEther(result.value[0]["fees"]["devStakeFee"])
+      );
+      const devUnstakeFee = parseFloat(
+        formatEther(result.value[0]["fees"]["devUnstakeFee"])
+      );
+      const adminStakeFee = parseFloat(
+        formatEther(result.value[0]["fees"]["adminStakeFee"])
+      );
+      const adminUnstakeFee = parseFloat(
+        formatEther(result.value[0]["fees"]["adminUnstakeFee"])
+      );
       const timestampAdded = parseInt(result.value[0]["timestampAdded"]);
       const timestampLastUpdated = parseInt(
         result.value[0]["timestampLastUpdated"]
@@ -123,17 +146,22 @@ export const useTokensData = (tokensAddresses: string[]): TokenData[] | [] => {
       tokensData[index] = {
         address: address,
         isActive: isActive,
-        hasMultiReward: hasMultiReward,
+        isVerified: isVerified,
+        hasMultiTokenRewards: hasMultiTokenRewards,
         name: name,
         category: category,
         price: price,
         rewardBalance: rewardBalance,
         stakingBalance: stakingBalance,
-        stakeFee: stakeFee,
-        unstakeFee: unstakeFee,
         stakingApr: stakingApr,
         rewardToken: rewardToken,
         admin: admin,
+        devDepositFee: devDepositFee,
+        devWithdrawFee: devWithdrawFee,
+        devStakeFee: devStakeFee,
+        devUnstakeFee: devUnstakeFee,
+        adminStakeFee: adminStakeFee,
+        adminUnstakeFee: adminUnstakeFee,
         timestampAdded: timestampAdded,
         timestampLastUpdated: timestampLastUpdated,
       };
@@ -177,13 +205,6 @@ export const useTokensStakerData = (
           return {
             id: parseInt(stakingReward["id"]),
             staker: stakingReward["staker"],
-            stakedToken: stakingReward["stakedToken"],
-            stakedTokenPrice: parseFloat(
-              formatEther(stakingReward["stakedTokenPrice"])
-            ),
-            stakedTokenAmount: parseFloat(
-              formatEther(stakingReward["stakedTokenAmount"])
-            ),
             rewardToken: stakingReward["rewardToken"],
             rewardTokenPrice: parseFloat(
               formatEther(stakingReward["rewardTokenPrice"])
@@ -191,12 +212,20 @@ export const useTokensStakerData = (
             rewardTokenAmount: parseFloat(
               formatEther(stakingReward["rewardTokenAmount"])
             ),
+            stakedToken: stakingReward["stakedToken"],
+            stakedTokenPrice: parseFloat(
+              formatEther(stakingReward["stakedTokenPrice"])
+            ),
+            stakedTokenAmount: parseFloat(
+              formatEther(stakingReward["stakedTokenAmount"])
+            ),
+            stakingApr: parseFloat(formatEther(stakingReward["stakingApr"])),
             stakingDurationInSeconds: parseInt(
               formatEther(stakingReward["stakingDurationInSeconds"])
             ),
-            actionPerformed: [
-              stakingReward["actionPerformed"][0],
-              stakingReward["actionPerformed"][1],
+            triggeredBy: [
+              stakingReward["triggeredBy"][0],
+              stakingReward["triggeredBy"][1],
             ],
             timestampAdded: parseInt(stakingReward["timestampAdded"]),
             timestampLastUpdated: parseInt(

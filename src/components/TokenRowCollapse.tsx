@@ -35,6 +35,11 @@ function Actions(props: {
 }) {
   const { tokenIndex, tokens, tokensAreUpdated } = props;
   const token = tokens[tokenIndex];
+  token.devStakeFee = token.devStakeFee !== 1e-18 ? token.devStakeFee : 1;
+  token.devUnstakeFee = token.devUnstakeFee !== 1e-18 ? token.devUnstakeFee : 1;
+  token.adminStakeFee = token.adminStakeFee !== 1e-18 ? token.adminStakeFee : 1;
+  token.adminUnstakeFee =
+    token.adminUnstakeFee !== 1e-18 ? token.adminUnstakeFee : 1;
 
   const { account: walletAddress } = useEthers();
   const walletIsConnected = walletAddress !== undefined;
@@ -123,10 +128,10 @@ function Actions(props: {
           </Box>
           <TabPanel value={tabOption}>
             <Typography variant="body2">
-              Stake Fee: {token.stakeFee.toLocaleString("en-us")}%
+              Stake Fee: {token.devStakeFee + token.adminStakeFee}%
             </Typography>
             <Typography variant="body2">
-              Unstake Fee: {token.unstakeFee.toLocaleString("en-us")}%
+              Unstake Fee: {token.devUnstakeFee + token.adminUnstakeFee}%
             </Typography>
             <TextField
               label="Amount"
