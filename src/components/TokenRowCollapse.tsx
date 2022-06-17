@@ -26,7 +26,11 @@ import { TabContext, TabList, TabPanel } from "@mui/lab";
 import { Token } from "./Main";
 import { StakingRewardsTable } from "./StakingRewardsTable";
 import { ConnectWallet } from "./ConnectWallet";
-import { useContract, useTokenContract } from "../hooks/savvy_finance_farm";
+import {
+  useContract,
+  useStakeToken,
+  useTokenContract,
+} from "../hooks/savvy_finance_farm";
 
 function Actions(props: {
   tokenIndex: number;
@@ -44,19 +48,15 @@ function Actions(props: {
   const { account: walletAddress } = useEthers();
   const walletIsConnected = walletAddress !== undefined;
 
+  const { tokenApproveAndStake, tokenApproveState } = useStakeToken(
+    token.address
+  );
+
   const svfFarmContract = useContract();
   const { state: setStakingRewardTokenState, send: setStakingRewardTokenSend } =
     useContractFunction(svfFarmContract, "setStakingRewardToken", {
       transactionName: "Set Staking Reward Token",
     });
-
-  const tokenContract = useTokenContract(token.address);
-  const { state: tokenApproveState, send: tokenApproveSend } =
-    useContractFunction(tokenContract, "approve", {
-      transactionName: "Approve Token",
-    });
-  // const tokenApprove = (amount: string) =>
-  //   tokenApproveSend(svfFarmContract.address, parseEther(amount));
 
   const [tabOption, setTabOption] = React.useState("stake");
   const handleChangeTabOption = (
@@ -81,7 +81,10 @@ function Actions(props: {
       setTabAmount(token.stakerData.rewardBalance.toString());
   };
   const handleClickTabButton = (event: React.MouseEvent<HTMLButtonElement>) => {
-    if (tabOption === "stake") console.log(tabOption);
+    if (tabOption === "stake") {
+      console.log(tabOption);
+      return tokenApproveAndStake(tabAmount.toString());
+    }
     if (tabOption === "unstake") console.log(tabOption);
     if (tabOption === "withdraw reward") console.log(tabOption);
   };

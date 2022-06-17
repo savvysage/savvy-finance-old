@@ -1,7 +1,13 @@
-import { ERC20Interface, useCall, useCalls, useEthers } from "@usedapp/core";
+import {
+  ERC20Interface,
+  useCall,
+  useCalls,
+  useContractFunction,
+  useEthers,
+} from "@usedapp/core";
 import { constants, Contract, utils } from "ethers";
-import { formatEther } from "ethers/lib/utils";
-import { useState } from "react";
+import { formatEther, parseEther } from "ethers/lib/utils";
+import { useEffect, useState } from "react";
 import axios from "axios";
 // import { networks } from "../helper-config.json"
 import contractAddresses from "../back_end_build/deployments/map.json";
@@ -281,4 +287,35 @@ export const useTokensPrices = (tokensAddresses: string[]): number[] => {
   });
 
   return tokensPrices;
+};
+
+export const useStakeToken = (tokenAddress: string) => {
+  const [tokenAmount, setTokenAmount] = useState("0");
+
+  const contract = useContract();
+  const tokenContract = useTokenContract(tokenAddress);
+
+  const { state: tokenApproveState, send: tokenApproveSend } =
+    useContractFunction(tokenContract, "approve", {
+      transactionName: "Approve Token",
+    });
+  const { state: stakeTokenState, send: stakeTokenSend } = useContractFunction(
+    contract,
+    "stakeToken",
+    {
+      transactionName: "Stake Token",
+    }
+  );
+
+  const tokenApproveAndStake = (tokenAmount: string) => {
+    setTokenAmount(tokenAmount);
+    return tokenApproveSend(contract.address, parseEther(tokenAmount));
+  };
+
+  useEffect(() => {
+    if (tokenApproveState.status === "Success")
+      stakeTokenSend(tokenAddress, parseEther(tokenAmount));
+  }, [tokenApproveState]);
+
+  return { tokenApproveAndStake, tokenApproveState };
 };
