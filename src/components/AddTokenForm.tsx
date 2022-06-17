@@ -65,7 +65,7 @@ export const AddTokenForm = () => {
                 <TextField
                   id="name1"
                   name="name1"
-                  label="Name1"
+                  label="Name 1"
                   autoComplete="name1"
                   fullWidth
                   variant="standard"
@@ -75,7 +75,7 @@ export const AddTokenForm = () => {
                 <TextField
                   id="name2"
                   name="name2"
-                  label="Name2"
+                  label="Name 2"
                   autoComplete="name2"
                   fullWidth
                   variant="standard"
