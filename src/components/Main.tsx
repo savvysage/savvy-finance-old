@@ -1,6 +1,6 @@
 import { useEthers } from "@usedapp/core";
 import { constants } from "ethers";
-import { Box, CircularProgress, Stack } from "@mui/material";
+import { Stack } from "@mui/material";
 import { TokensTable } from "./TokensTable";
 import * as svfFarm from "../hooks/savvy_finance_farm";
 import { getContractAddress } from "../common";
@@ -88,17 +88,8 @@ export const Main = () => {
     }
 
   return (
-    <>
-      {!tokensAreUpdated ? (
-        <Box sx={{ display: "flex", justifyContent: "center" }}>
-          <CircularProgress />
-        </Box>
-      ) : (
-        ""
-      )}
-      <Stack spacing={2}>
-        <TokensTable tokens={tokens} tokensAreUpdated={tokensAreUpdated} />
-      </Stack>
-    </>
+    <Stack spacing={2}>
+      <TokensTable tokens={tokens} tokensAreUpdated={tokensAreUpdated} />
+    </Stack>
   );
 };

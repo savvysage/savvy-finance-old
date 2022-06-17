@@ -1,6 +1,7 @@
 import React from "react";
 import {
   Box,
+  CircularProgress,
   Paper,
   Table,
   TableBody,
@@ -94,48 +95,54 @@ export const TokensTable = (props: {
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - tokens.length) : 0;
 
   return (
-    <Box component={Paper} mx={{ md: "10%" }}>
+    <Box mx={{ md: "10%" }}>
+      {!tokensAreUpdated ? (
+        <Box sx={{ display: "flex", justifyContent: "center" }}>
+          <CircularProgress />
+        </Box>
+      ) : null}
       <AddToken />
-      <br />
-      <TableContainer>
-        <Table aria-label="tokens table" size="small">
-          <TableBody>
-            {/* {tokens.map((token) => (
+      <Box component={Paper}>
+        <TableContainer>
+          <Table aria-label="tokens table" size="small">
+            <TableBody>
+              {/* {tokens.map((token) => (
                 <TokensRow key={token.name} token={token} tokens={tokens} />
               ))} */}
-            {/* if you don't need to support IE11, you can replace the `stableSort` call with:
+              {/* if you don't need to support IE11, you can replace the `stableSort` call with:
                 tokens.slice().sort(getComparator(order, orderBy)) */}
-            {stableSort(tokens, getComparator(order, orderBy))
-              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((token, tokenIndex) => (
-                <TokenRow
-                  key={tokenIndex}
-                  tokenIndex={tokenIndex}
-                  tokens={tokens}
-                  tokensAreUpdated={tokensAreUpdated}
-                />
-              ))}
-            {emptyRows > 0 && (
-              <TableRow
-                style={{
-                  height: 33 * emptyRows,
-                }}
-              >
-                <TableCell colSpan={5} />
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      </TableContainer>
-      <TablePagination
-        rowsPerPageOptions={[5, 10, 25, 50]}
-        component="div"
-        count={tokens.length}
-        rowsPerPage={rowsPerPage}
-        page={page}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
-      />
+              {stableSort(tokens, getComparator(order, orderBy))
+                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                .map((token, tokenIndex) => (
+                  <TokenRow
+                    key={tokenIndex}
+                    tokenIndex={tokenIndex}
+                    tokens={tokens}
+                    tokensAreUpdated={tokensAreUpdated}
+                  />
+                ))}
+              {emptyRows > 0 && (
+                <TableRow
+                  style={{
+                    height: 33 * emptyRows,
+                  }}
+                >
+                  <TableCell colSpan={5} />
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </TableContainer>
+        <TablePagination
+          rowsPerPageOptions={[5, 10, 25, 50]}
+          component="div"
+          count={tokens.length}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+        />
+      </Box>
     </Box>
   );
 };

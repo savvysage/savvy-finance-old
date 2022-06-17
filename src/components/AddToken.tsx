@@ -9,6 +9,7 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import CloseIcon from "@mui/icons-material/Close";
+import { AddTokenForm } from "./AddTokenForm";
 
 export const AddToken = () => {
   const [open, setOpen] = React.useState(false);
@@ -22,12 +23,12 @@ export const AddToken = () => {
   };
 
   return (
-    <Box textAlign="right">
+    <Box textAlign="right" my="1%">
       <Button variant="contained" onClick={handleClickOpen}>
         <AddCircleIcon />
         &nbsp; Add Token
       </Button>
-      <Dialog open={open} maxWidth="xl">
+      <Dialog open={open}>
         <DialogTitle>
           Add Token
           <IconButton
@@ -43,19 +44,11 @@ export const AddToken = () => {
           </IconButton>
         </DialogTitle>
         <DialogContent dividers>
-          <DialogContentText>
+          {/* <DialogContentText>
             To subscribe to this website, please enter your email address here.
             We will send updates occasionally.
-          </DialogContentText>
-          <TextField
-            autoFocus
-            margin="dense"
-            id="name"
-            label="Email Address"
-            type="email"
-            fullWidth
-            variant="standard"
-          />
+          </DialogContentText> */}
+          <AddTokenForm />
         </DialogContent>
         <DialogActions>
           {/* <Button onClick={handleClose}>Cancel</Button> */}
