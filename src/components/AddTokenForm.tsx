@@ -34,21 +34,17 @@ export const AddTokenForm = (props: {
     setCategory(parseInt(newCategory));
   };
 
+  const [rewardToken, setRewardToken] = React.useState("default");
+  const handleChangeRewardToken = (event: SelectChangeEvent) => {
+    const newRewardToken = event.target.value;
+    setRewardToken(newRewardToken);
+  };
+
   return (
     <React.Fragment>
-      {/* <Typography variant="h6" gutterBottom>
-        Shipping address
-      </Typography> */}
       <Grid container spacing={3}>
         <Grid item xs={12}>
-          <TextField
-            required
-            id="address"
-            name="address"
-            label="Address"
-            autoComplete="address"
-            fullWidth
-          />
+          <TextField required label="Address" fullWidth />
         </Grid>
         <Grid item xs={12}>
           <FormControl fullWidth>
@@ -66,34 +62,19 @@ export const AddTokenForm = (props: {
         <Grid item xs={12}>
           <TextField
             required
-            id="name"
-            name="name"
             label="Name"
-            autoComplete="name"
+            defaultValue={category !== 0 ? "NAME1-NAME2" : undefined}
+            variant={category !== 0 ? "filled" : undefined}
             disabled={category !== 0}
             fullWidth
           />
           {category !== 0 ? (
             <Grid container spacing={3} pt="10px">
               <Grid item xs={6}>
-                <TextField
-                  required
-                  id="name1"
-                  name="name1"
-                  label="Name 1"
-                  autoComplete="name1"
-                  fullWidth
-                />
+                <TextField required label="Name 1" fullWidth />
               </Grid>
               <Grid item xs={6}>
-                <TextField
-                  required
-                  id="name2"
-                  name="name2"
-                  label="Name 2"
-                  autoComplete="name2"
-                  fullWidth
-                />
+                <TextField required label="Name 2" fullWidth />
               </Grid>
             </Grid>
           ) : null}
@@ -101,10 +82,8 @@ export const AddTokenForm = (props: {
         <Grid item xs={12}>
           <TextField
             required
-            id="stakingApr"
-            name="stakingApr"
+            type="number"
             label="Staking APR"
-            autoComplete="staking apr"
             InputProps={{
               endAdornment: <InputAdornment position="end">%</InputAdornment>,
             }}
@@ -116,8 +95,8 @@ export const AddTokenForm = (props: {
             <InputLabel>Reward Token</InputLabel>
             <Select
               label="Reward Token"
-              defaultValue="default"
-              // onChange={handleChangeStakingRewardToken}
+              value={rewardToken}
+              onChange={handleChangeRewardToken}
             >
               <MenuItem value="default">SAME AS TOKEN</MenuItem>
               {tokens.map((token) =>
@@ -130,26 +109,22 @@ export const AddTokenForm = (props: {
             </Select>
           </FormControl>
         </Grid>
-        <Grid item xs={12}>
+        <Grid item xs={6}>
           <TextField
             required
-            id="adminStakeFee"
-            name="adminStakeFee"
-            label="Admin Stake Fee"
-            autoComplete="admin stake fee"
+            type="number"
+            label="Stake Fee (Admin)"
             InputProps={{
               endAdornment: <InputAdornment position="end">%</InputAdornment>,
             }}
             fullWidth
           />
         </Grid>
-        <Grid item xs={12}>
+        <Grid item xs={6}>
           <TextField
             required
-            id="adminUnstakeFee"
-            name="adminUnstakeFee"
-            label="Admin Unstake Fee"
-            autoComplete="admin unstake fee"
+            type="number"
+            label="Unstake Fee (Admin)"
             InputProps={{
               endAdornment: <InputAdornment position="end">%</InputAdornment>,
             }}
