@@ -101,7 +101,7 @@ export const TokensTable = (props: {
           <CircularProgress />
         </Box>
       ) : null}
-      <AddToken />
+      <AddToken tokens={tokens} tokensAreUpdated={tokensAreUpdated} />
       <Box component={Paper}>
         <TableContainer>
           <Table aria-label="tokens table" size="small">
