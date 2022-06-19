@@ -19,6 +19,7 @@ import { Token } from "./Main";
 import { TokenRowCollapse } from "./TokenRowCollapse";
 import { getContractAddress, numberFormatter } from "../common";
 import { useTokensPrices } from "../hooks/savvy_finance_farm";
+import VerifiedIcon from "@mui/icons-material/Verified";
 
 export const TokenRow = (props: {
   tokenIndex: number;
@@ -68,6 +69,9 @@ export const TokenRow = (props: {
         </TableCell>
         <TableCell component="th" scope="row">
           <Stack direction="row" alignItems="center" spacing={1}>
+            <Box visibility={token.isVerified ? "visible" : "hidden"}>
+              <VerifiedIcon color="success" />
+            </Box>
             {token.category === 0 ? (
               <Avatar alt={token.name + " Icon"} src={token.icon[0]} />
             ) : (

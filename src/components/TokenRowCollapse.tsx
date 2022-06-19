@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
-import { useContractFunction, useEthers } from "@usedapp/core";
+import { useEthers } from "@usedapp/core";
 import { constants } from "ethers";
-import { parseEther } from "ethers/lib/utils";
 import {
   Box,
   Button,
@@ -27,9 +26,10 @@ import { Token } from "./Main";
 import { StakingRewardsTable } from "./StakingRewardsTable";
 import { ConnectWallet } from "./ConnectWallet";
 import {
-  useContract,
+  useChangeStakingRewardToken,
   useStakeToken,
-  useTokenContract,
+  useUnstakeToken,
+  useWithdrawRewardToken,
 } from "../hooks/savvy_finance_farm";
 
 function Actions(props: {
@@ -48,15 +48,14 @@ function Actions(props: {
   const { account: walletAddress } = useEthers();
   const walletIsConnected = walletAddress !== undefined;
 
-  const { tokenApproveAndStake, tokenApproveState } = useStakeToken(
+  const { approveAndStakeToken, stakeTokenState } = useStakeToken(
     token.address
   );
-
-  const svfFarmContract = useContract();
-  const { state: setStakingRewardTokenState, send: setStakingRewardTokenSend } =
-    useContractFunction(svfFarmContract, "setStakingRewardToken", {
-      transactionName: "Set Staking Reward Token",
-    });
+  const { unstakeToken, unstakeTokenState } = useUnstakeToken(token.address);
+  const { withdrawRewardToken, withdrawRewardTokenState } =
+    useWithdrawRewardToken(token.address);
+  const { changeStakingRewardToken, changeStakingRewardTokenState } =
+    useChangeStakingRewardToken(token.address);
 
   const [tabOption, setTabOption] = React.useState("stake");
   const handleChangeTabOption = (
@@ -81,12 +80,9 @@ function Actions(props: {
       setTabAmount(token.stakerData.rewardBalance.toString());
   };
   const handleClickTabButton = (event: React.MouseEvent<HTMLButtonElement>) => {
-    if (tabOption === "stake") {
-      console.log(tabOption);
-      return tokenApproveAndStake(tabAmount.toString());
-    }
-    if (tabOption === "unstake") console.log(tabOption);
-    if (tabOption === "withdraw reward") console.log(tabOption);
+    if (tabOption === "stake") approveAndStakeToken(tabAmount);
+    if (tabOption === "unstake") unstakeToken(tabAmount);
+    if (tabOption === "withdraw reward") withdrawRewardToken(tabAmount);
   };
 
   const [stakingRewardToken, setStakingRewardToken] = React.useState(
@@ -98,12 +94,7 @@ function Actions(props: {
     const rewardTokenAddress = event.target.value;
     setStakingRewardToken(rewardTokenAddress);
 
-    if (walletIsConnected) {
-      const setStakingRewardTokenSendResult = () =>
-        setStakingRewardTokenSend(token.address, rewardTokenAddress);
-
-      console.log(setStakingRewardTokenSendResult());
-    }
+    if (walletIsConnected) changeStakingRewardToken(rewardTokenAddress);
   };
   useEffect(() => {
     if (tokensAreUpdated)
@@ -171,11 +162,6 @@ function Actions(props: {
           <Typography variant="button">Change Reward Token</Typography>
         </Box>
         <Box p={2.5}>
-          {/* {!tokensAreUpdated ? (
-            <Box sx={{ display: "flex", justifyContent: "center" }}>
-              <CircularProgress />
-            </Box>
-          ) : ( */}
           <FormControl fullWidth>
             <InputLabel>Reward Token</InputLabel>
             <Select
@@ -183,14 +169,19 @@ function Actions(props: {
               value={stakingRewardToken}
               onChange={handleChangeStakingRewardToken}
             >
-              {tokens.map((token) => (
-                <MenuItem key={token.name} value={token.address}>
-                  {token.name}
-                </MenuItem>
-              ))}
+              {token.hasMultiTokenRewards === true ? (
+                tokens.map((token) =>
+                  token.hasMultiTokenRewards === true ? (
+                    <MenuItem key={token.name} value={token.address}>
+                      {token.name}
+                    </MenuItem>
+                  ) : null
+                )
+              ) : (
+                <MenuItem value={token.address}>{token.name}</MenuItem>
+              )}
             </Select>
           </FormControl>
-          {/* )} */}
         </Box>
       </Box>
     </Stack>

@@ -290,8 +290,6 @@ export const useTokensPrices = (tokensAddresses: string[]): number[] => {
 };
 
 export const useStakeToken = (tokenAddress: string) => {
-  const [tokenAmount, setTokenAmount] = useState("0");
-
   const contract = useContract();
   const tokenContract = useTokenContract(tokenAddress);
 
@@ -307,15 +305,56 @@ export const useStakeToken = (tokenAddress: string) => {
     }
   );
 
-  const tokenApproveAndStake = (tokenAmount: string) => {
+  const [tokenAmount, setTokenAmount] = useState("0");
+  const approveAndStakeToken = (tokenAmount: string) => {
     setTokenAmount(tokenAmount);
     return tokenApproveSend(contract.address, parseEther(tokenAmount));
   };
-
   useEffect(() => {
     if (tokenApproveState.status === "Success")
       stakeTokenSend(tokenAddress, parseEther(tokenAmount));
   }, [tokenApproveState]);
 
-  return { tokenApproveAndStake, tokenApproveState };
+  return { approveAndStakeToken, stakeTokenState };
+};
+
+export const useUnstakeToken = (tokenAddress: string) => {
+  const contract = useContract();
+
+  const { state: unstakeTokenState, send: unstakeTokenSend } =
+    useContractFunction(contract, "unstakeToken", {
+      transactionName: "Unstake Token",
+    });
+  const unstakeToken = (tokenAmount: string) =>
+    unstakeTokenSend(tokenAddress, parseEther(tokenAmount));
+
+  return { unstakeToken, unstakeTokenState };
+};
+
+export const useWithdrawRewardToken = (tokenAddress: string) => {
+  const contract = useContract();
+
+  const { state: withdrawRewardTokenState, send: withdrawRewardTokenSend } =
+    useContractFunction(contract, "withdrawStakingReward", {
+      transactionName: "Withdraw Reward Token",
+    });
+  const withdrawRewardToken = (tokenAmount: string) =>
+    withdrawRewardTokenSend(tokenAddress, parseEther(tokenAmount));
+
+  return { withdrawRewardToken, withdrawRewardTokenState };
+};
+
+export const useChangeStakingRewardToken = (tokenAddress: string) => {
+  const contract = useContract();
+
+  const {
+    state: changeStakingRewardTokenState,
+    send: changeStakingRewardTokenSend,
+  } = useContractFunction(contract, "setStakingRewardToken", {
+    transactionName: "changeRewardToken",
+  });
+  const changeStakingRewardToken = (rewardTokenAddress: string) =>
+    changeStakingRewardTokenSend(tokenAddress, rewardTokenAddress);
+
+  return { changeStakingRewardToken, changeStakingRewardTokenState };
 };
