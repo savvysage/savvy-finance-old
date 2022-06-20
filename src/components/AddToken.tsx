@@ -31,7 +31,7 @@ export const AddToken = (props: {
   };
 
   return (
-    <Box textAlign="right" my="1%">
+    <Box textAlign="right" my="1.5%">
       <Button variant="contained" onClick={handleClickOpen}>
         <AddCircleIcon />
         &nbsp; Add Token

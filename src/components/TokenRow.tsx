@@ -18,7 +18,10 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import { Token } from "./Main";
 import { TokenRowCollapse } from "./TokenRowCollapse";
 import { getContractAddress, numberFormatter } from "../common";
-import { useTokensPrices } from "../hooks/savvy_finance_farm";
+import {
+  getTokenByAddress,
+  useTokensPrices,
+} from "../hooks/savvy_finance_farm";
 import VerifiedIcon from "@mui/icons-material/Verified";
 
 export const TokenRow = (props: {
@@ -41,6 +44,7 @@ export const TokenRow = (props: {
   );
 
   const token = tokens[tokenIndex];
+  const rewardToken = getTokenByAddress(token.rewardToken, tokens);
 
   const [open, setOpen] = React.useState(false);
   const SmallAvatar = styled(Avatar)(({ theme }) => ({
@@ -90,14 +94,14 @@ export const TokenRow = (props: {
             )}
             <Box>
               <Typography variant="button" fontSize={{ sm: "1.1rem" }}>
-                Stake {token.category !== 1 ? token.name : token.name + " LP"}
+                Stake {token.name}
               </Typography>
               <Typography
                 variant="caption"
                 display={{ xs: "none", sm: "block" }}
               >
-                Earn {token.category !== 1 ? token.name : token.name + " LP"} &
-                more.
+                Earn {rewardToken?.name}
+                {token.hasMultiTokenRewards ? " & more." : "."}
               </Typography>
             </Box>
           </Stack>
@@ -107,8 +111,7 @@ export const TokenRow = (props: {
             ml={1}
             display={{ xs: "block", sm: "none" }}
           >
-            Earn {token.category !== 1 ? token.name : token.name + " LP"} &
-            more.
+            Earn {token.name} & more.
           </Typography>
         </TableCell>
         <TableCell>
@@ -118,8 +121,7 @@ export const TokenRow = (props: {
         <TableCell>
           <Typography variant="subtitle2">Total Staked</Typography>
           <Typography noWrap>
-            {numberFormatter.format(token.stakingBalance)}{" "}
-            {token.category !== 1 ? token.name : token.name + " LP"}
+            {numberFormatter.format(token.stakingBalance)} {token.name}
           </Typography>
           <Typography variant="body2" noWrap>
             {numberFormatter.format(token.price * token.stakingBalance)} USD
@@ -130,7 +132,7 @@ export const TokenRow = (props: {
             <Typography variant="subtitle2">You Staked</Typography>
             <Typography noWrap>
               {numberFormatter.format(token.stakerData.stakingBalance)}{" "}
-              {token.category !== 1 ? token.name : token.name + " LP"}
+              {token.name}
             </Typography>
             <Typography variant="body2" noWrap>
               {numberFormatter.format(

@@ -27,12 +27,12 @@ export const StakingRewardsTable = (props: {
         <TableHead>
           <TableRow>
             <TableCell>ID</TableCell>
-            <TableCell align="right">Reward Value</TableCell>
-            <TableCell align="right">Staking Value</TableCell>
-            <TableCell align="right">Staking APR</TableCell>
-            <TableCell align="right">Staking Duration</TableCell>
-            <TableCell align="right">Triggered By</TableCell>
-            <TableCell align="right">Time</TableCell>
+            <TableCell>Reward Value</TableCell>
+            <TableCell>Staking Value</TableCell>
+            <TableCell>Staking APR</TableCell>
+            <TableCell>Staking Duration</TableCell>
+            <TableCell>Triggered By</TableCell>
+            <TableCell>Time</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -47,7 +47,7 @@ export const StakingRewardsTable = (props: {
                 <TableCell component="th" scope="row">
                   <Typography noWrap>{stakingReward.id}</Typography>
                 </TableCell>
-                <TableCell align="right">
+                <TableCell>
                   <Typography noWrap>
                     {numberFormatter.format(stakingReward.rewardTokenAmount)}{" "}
                     {token.name}
@@ -60,7 +60,7 @@ export const StakingRewardsTable = (props: {
                     USD
                   </Typography>
                 </TableCell>
-                <TableCell align="right">
+                <TableCell>
                   <Typography noWrap>
                     {numberFormatter.format(stakingReward.stakedTokenAmount)}{" "}
                     {token.name}
@@ -73,21 +73,24 @@ export const StakingRewardsTable = (props: {
                     USD
                   </Typography>
                 </TableCell>
-                <TableCell align="right">
+                <TableCell>
                   <Typography noWrap>{stakingReward.stakingApr}%</Typography>
                 </TableCell>
-                <TableCell align="right">
+                <TableCell>
                   <Typography noWrap>
-                    {stakingReward.stakingDurationInSeconds} secs
+                    {numberFormatter.format(
+                      stakingReward.stakingDurationInSeconds
+                    )}{" "}
+                    secs
                   </Typography>
                 </TableCell>
-                <TableCell align="right">
+                <TableCell>
                   <Typography noWrap>
                     {stakingReward.triggeredBy[0]}{" "}
                     {stakingReward.triggeredBy[1]}
                   </Typography>
                 </TableCell>
-                <TableCell align="right">
+                <TableCell>
                   <Typography noWrap>
                     {moment(
                       new Date(stakingReward.timestampAdded * 1000)

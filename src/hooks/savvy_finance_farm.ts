@@ -12,6 +12,7 @@ import axios from "axios";
 // import { networks } from "../helper-config.json"
 import contractAddresses from "../back_end_build/deployments/map.json";
 import SavvyFinanceFarm from "../back_end_build/contracts/SavvyFinanceFarm.json";
+import { Token } from "../components/Main";
 
 // axios.defaults.headers.common["Access-Control-Allow-Origin"] = "*";
 
@@ -61,6 +62,17 @@ export type TokenStakerData = {
   timestampLastRewarded: number;
   timestampAdded: number;
   timestampLastUpdated: number;
+};
+
+export const getTokenByAddress = (
+  tokenAddress: string,
+  tokens: Token[]
+): Token | undefined => {
+  var token: Token | undefined;
+  tokens.forEach((tokenx) => {
+    if (tokenx.address === tokenAddress) token = tokenx;
+  });
+  return token;
 };
 
 export const useContract = (): Contract => {

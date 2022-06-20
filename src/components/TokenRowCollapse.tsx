@@ -255,14 +255,17 @@ export const TokenRowCollapse = (props: {
                 </Box>
               </Stack>
             </TableCell>
-            <TableCell sx={{ maxWidth: "10rem" }}>
-              <Box display={{ xs: "none", sm: "block" }}>
-                <Actions
-                  tokenIndex={tokenIndex}
-                  tokens={tokens}
-                  tokensAreUpdated={tokensAreUpdated}
-                />
-              </Box>
+            <TableCell
+              sx={{
+                maxWidth: "10rem",
+                display: { xs: "none", sm: "table-cell" },
+              }}
+            >
+              <Actions
+                tokenIndex={tokenIndex}
+                tokens={tokens}
+                tokensAreUpdated={tokensAreUpdated}
+              />
             </TableCell>
           </TableRow>
         </TableBody>
