@@ -31,7 +31,7 @@ export const TokenRow = (props: {
 }) => {
   const { tokenIndex, tokens, tokensAreUpdated } = props;
   const { account: walletAddress } = useEthers();
-  // const walletIsConnected = walletAddress !== undefined;
+  const walletIsConnected = walletAddress !== undefined;
 
   // tokens[tokenIndex].price = useTokensPrices([
   //   getContractAddress(
@@ -120,17 +120,12 @@ export const TokenRow = (props: {
           <Typography>{token.stakingApr}%</Typography>
         </TableCell>
         <TableCell>
-          <Typography variant="subtitle2">Total Staked</Typography>
-          <Typography noWrap>
-            {numberFormatter.format(token.stakingBalance)} {token.name}
-          </Typography>
-          <Typography variant="body2" noWrap>
-            {numberFormatter.format(token.price * token.stakingBalance)} USD
-          </Typography>
-        </TableCell>
-        <TableCell>
-          <Box display={{ xs: "none", sm: "block" }}>
-            <Typography variant="subtitle2">You Staked</Typography>
+          <Box
+            display={{ xs: walletIsConnected ? "block" : "none", sm: "block" }}
+          >
+            <Typography variant="subtitle2" noWrap>
+              You Staked
+            </Typography>
             <Typography noWrap>
               {numberFormatter.format(token.stakerData.stakingBalance)}{" "}
               {token.name}
@@ -138,6 +133,62 @@ export const TokenRow = (props: {
             <Typography variant="body2" noWrap>
               {numberFormatter.format(
                 token.price * token.stakerData.stakingBalance
+              )}{" "}
+              USD
+            </Typography>
+          </Box>
+        </TableCell>
+        <TableCell>
+          <Box
+            display={{ xs: walletIsConnected ? "block" : "none", sm: "block" }}
+          >
+            <Typography variant="subtitle2" noWrap>
+              Your Reward Balance
+            </Typography>
+            <Typography noWrap>
+              {numberFormatter.format(
+                rewardToken?.stakerData.rewardBalance ?? 0
+              )}{" "}
+              {rewardToken?.name}
+            </Typography>
+            <Typography variant="body2" noWrap>
+              {numberFormatter.format(
+                (rewardToken?.price ?? 0) *
+                  (rewardToken?.stakerData.rewardBalance ?? 0)
+              )}{" "}
+              USD
+            </Typography>
+          </Box>
+        </TableCell>
+        <TableCell>
+          <Box
+            display={{ xs: walletIsConnected ? "none" : "block", sm: "block" }}
+          >
+            <Typography variant="subtitle2" noWrap>
+              Total Staked
+            </Typography>
+            <Typography noWrap>
+              {numberFormatter.format(token.stakingBalance)} {token.name}
+            </Typography>
+            <Typography variant="body2" noWrap>
+              {numberFormatter.format(token.price * token.stakingBalance)} USD
+            </Typography>
+          </Box>
+        </TableCell>
+        <TableCell>
+          <Box
+            display={{ xs: walletIsConnected ? "none" : "block", sm: "block" }}
+          >
+            <Typography variant="subtitle2" noWrap>
+              Reward Balance
+            </Typography>
+            <Typography noWrap>
+              {numberFormatter.format(rewardToken?.rewardBalance ?? 0)}{" "}
+              {rewardToken?.name}
+            </Typography>
+            <Typography variant="body2" noWrap>
+              {numberFormatter.format(
+                (rewardToken?.price ?? 0) * (rewardToken?.rewardBalance ?? 0)
               )}{" "}
               USD
             </Typography>

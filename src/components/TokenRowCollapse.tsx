@@ -26,6 +26,7 @@ import { Token } from "./Main";
 import { StakingRewardsTable } from "./StakingRewardsTable";
 import { ConnectWallet } from "./ConnectWallet";
 import {
+  getTokenByAddress,
   useChangeStakingRewardToken,
   useStakeToken,
   useUnstakeToken,
@@ -108,6 +109,33 @@ function Actions(props: {
   return (
     <Stack spacing={2.5}>
       <Box component={Paper}>
+        <Box px={2.5} py={1.5} sx={{ borderBottom: 1, borderColor: "divider" }}>
+          <Typography variant="button">Change Reward Token</Typography>
+        </Box>
+        <Box p={2.5}>
+          <FormControl fullWidth>
+            <InputLabel>Reward Token</InputLabel>
+            <Select
+              label="Reward Token"
+              value={stakingRewardToken}
+              onChange={handleChangeStakingRewardToken}
+            >
+              {token.hasMultiTokenRewards === true ? (
+                tokens.map((token) =>
+                  token.hasMultiTokenRewards === true ? (
+                    <MenuItem key={token.name} value={token.address}>
+                      {token.name}
+                    </MenuItem>
+                  ) : null
+                )
+              ) : (
+                <MenuItem value={token.address}>{token.name}</MenuItem>
+              )}
+            </Select>
+          </FormControl>
+        </Box>
+      </Box>
+      <Box component={Paper}>
         <TabContext value={tabOption}>
           <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
             <TabList
@@ -157,33 +185,6 @@ function Actions(props: {
           </TabPanel>
         </TabContext>
       </Box>
-      <Box component={Paper}>
-        <Box px={2.5} py={1.5} sx={{ borderBottom: 1, borderColor: "divider" }}>
-          <Typography variant="button">Change Reward Token</Typography>
-        </Box>
-        <Box p={2.5}>
-          <FormControl fullWidth>
-            <InputLabel>Reward Token</InputLabel>
-            <Select
-              label="Reward Token"
-              value={stakingRewardToken}
-              onChange={handleChangeStakingRewardToken}
-            >
-              {token.hasMultiTokenRewards === true ? (
-                tokens.map((token) =>
-                  token.hasMultiTokenRewards === true ? (
-                    <MenuItem key={token.name} value={token.address}>
-                      {token.name}
-                    </MenuItem>
-                  ) : null
-                )
-              ) : (
-                <MenuItem value={token.address}>{token.name}</MenuItem>
-              )}
-            </Select>
-          </FormControl>
-        </Box>
-      </Box>
     </Stack>
   );
 }
@@ -195,6 +196,7 @@ export const TokenRowCollapse = (props: {
 }) => {
   const { tokenIndex, tokens, tokensAreUpdated } = props;
   const token = tokens[tokenIndex];
+  const rewardToken = getTokenByAddress(token.rewardToken, tokens);
 
   // const { account: walletAddress } = useEthers();
   // const walletIsConnected = walletAddress !== undefined;
@@ -227,8 +229,10 @@ export const TokenRowCollapse = (props: {
                     </Typography>
                     <Typography variant="body2">
                       Reward Balance:{" "}
-                      {token.stakerData.rewardBalance.toLocaleString("en-us")}{" "}
-                      {token.name}
+                      {rewardToken?.stakerData.rewardBalance.toLocaleString(
+                        "en-us"
+                      )}{" "}
+                      {rewardToken?.name}
                     </Typography>
                   </Box>
                 </Box>
