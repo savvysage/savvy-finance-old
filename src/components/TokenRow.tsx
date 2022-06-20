@@ -108,10 +108,10 @@ export const TokenRow = (props: {
           <Typography
             variant="caption"
             align="justify"
-            ml={1}
             display={{ xs: "block", sm: "none" }}
           >
-            Earn {token.name} & more.
+            Earn {rewardToken?.name}
+            {token.hasMultiTokenRewards ? " & more." : "."}
           </Typography>
         </TableCell>
         <TableCell>
