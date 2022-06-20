@@ -97,8 +97,8 @@ export const TokenRow = (props: {
                 Stake {token.name}
               </Typography>
               <Typography
-                variant="caption"
                 display={{ xs: "none", sm: "block" }}
+                variant="caption"
               >
                 Earn {rewardToken?.name}
                 {token.hasMultiTokenRewards ? " & more." : "."}
@@ -106,9 +106,10 @@ export const TokenRow = (props: {
             </Box>
           </Stack>
           <Typography
+            display={{ xs: "block", sm: "none" }}
             variant="caption"
             align="justify"
-            display={{ xs: "block", sm: "none" }}
+            ml={4}
           >
             Earn {rewardToken?.name}
             {token.hasMultiTokenRewards ? " & more." : "."}
