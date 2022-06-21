@@ -11,13 +11,16 @@ import {
   Typography,
 } from "@mui/material";
 import { Token } from "./Main";
-import { numberFormatter } from "../common";
+import { calculateStakingReward, numberFormatter } from "../common";
+import { getTokenByAddress } from "../hooks/savvy_finance_farm";
 
 export const StakingRewardsTable = (props: {
   token: Token;
   tokens: Token[];
 }) => {
   const { token, tokens } = props;
+  const rewardToken = getTokenByAddress(token.rewardToken, tokens);
+
   const { account: walletAddress } = useEthers();
   const walletIsConnected = walletAddress !== undefined;
 

@@ -32,6 +32,7 @@ import {
   useUnstakeToken,
   useWithdrawRewardToken,
 } from "../hooks/savvy_finance_farm";
+import { calculateStakingReward, numberFormatter } from "../common";
 
 function Actions(props: {
   tokenIndex: number;
@@ -201,8 +202,17 @@ export const TokenRowCollapse = (props: {
   // const { account: walletAddress } = useEthers();
   // const walletIsConnected = walletAddress !== undefined;
 
+  const stakingRewardValue = calculateStakingReward(
+    token.stakingApr,
+    token.price * token.stakerData.stakingBalance,
+    token.stakerData.timestampLastRewarded !== 0
+      ? token.stakerData.timestampLastRewarded
+      : token.stakerData.timestampAdded
+  );
+  const rewardTokenAmount = stakingRewardValue / (rewardToken?.price ?? 0);
+
   return (
-    <Box sx={{ margin: 1 }}>
+    <Box sx={{ my: 2.5, mx: { xs: 10, sm: 5 } }}>
       <Table size="small" aria-label="token row collapse">
         <TableBody>
           <TableRow sx={{ textAlign: "center", verticalAlign: "top" }}>
@@ -247,6 +257,24 @@ export const TokenRowCollapse = (props: {
                     </Typography>
                   </Box>
                   <Box p={2.5}>
+                    <Box my={1}>
+                      <Typography>
+                        Pending Reward:{" "}
+                        {numberFormatter.format(rewardTokenAmount)}{" "}
+                        {rewardToken?.name} (
+                        <Typography variant="body2" component="span">
+                          {numberFormatter.format(stakingRewardValue)} USD
+                        </Typography>
+                        ){" "}
+                        <Button
+                          size="small"
+                          color="secondary"
+                          // onClick={handleClickTabButton}
+                        >
+                          Claim
+                        </Button>
+                      </Typography>
+                    </Box>
                     <StakingRewardsTable token={token} tokens={tokens} />
                   </Box>
                 </Box>
