@@ -32,7 +32,38 @@ export const AddTokenForm = (props: {
   const handleChangeCategory = (event: SelectChangeEvent) => {
     const newCategory = event.target.value;
     setCategory(parseInt(newCategory));
+    if (newCategory === "0") setName("");
+    if (newCategory === "1")
+      setName(
+        (name1 !== "" ? name1 : "NAME1") +
+          "-" +
+          (name2 !== "" ? name2 : "NAME2")
+      );
   };
+
+  const [name, setName] = React.useState("");
+  const handleChangeName = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newName = event.target.value;
+    setName(newName);
+  };
+  const [name1, setName1] = React.useState("");
+  const handleChangeName1 = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newName1 = event.target.value;
+    setName1(newName1);
+  };
+  const [name2, setName2] = React.useState("");
+  const handleChangeName2 = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newName2 = event.target.value;
+    setName2(newName2);
+  };
+  useEffect(() => {
+    if (category === 1)
+      setName(
+        (name1 !== "" ? name1 : "NAME1") +
+          "-" +
+          (name2 !== "" ? name2 : "NAME2")
+      );
+  }, [name1, name2]);
 
   const [rewardToken, setRewardToken] = React.useState("default");
   const handleChangeRewardToken = (event: SelectChangeEvent) => {
@@ -63,18 +94,31 @@ export const AddTokenForm = (props: {
           <TextField
             required
             label="Name"
-            defaultValue={category !== 0 ? "NAME1-NAME2" : undefined}
             variant={category !== 0 ? "filled" : undefined}
             disabled={category !== 0}
             fullWidth
+            value={name}
+            onChange={handleChangeName}
           />
           {category !== 0 ? (
             <Grid container spacing={3} pt="10px">
               <Grid item xs={6}>
-                <TextField required label="Name 1" fullWidth />
+                <TextField
+                  required
+                  label="Name 1"
+                  fullWidth
+                  value={name1}
+                  onChange={handleChangeName1}
+                />
               </Grid>
               <Grid item xs={6}>
-                <TextField required label="Name 2" fullWidth />
+                <TextField
+                  required
+                  label="Name 2"
+                  fullWidth
+                  value={name2}
+                  onChange={handleChangeName2}
+                />
               </Grid>
             </Grid>
           ) : null}
