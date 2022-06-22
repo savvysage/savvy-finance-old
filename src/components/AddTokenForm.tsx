@@ -25,13 +25,14 @@ export const AddTokenForm = (props: {
 
   const [address, setAddress] = React.useState("");
   const handleChangeAddress = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setAddress(event.target.value);
+    const newAddress = event.target.value;
+    setAddress(newAddress);
   };
 
-  const [category, setCategory] = React.useState(0);
+  const [category, setCategory] = React.useState("0");
   const handleChangeCategory = (event: SelectChangeEvent) => {
     const newCategory = event.target.value;
-    setCategory(parseInt(newCategory));
+    setCategory(newCategory);
     if (newCategory === "0") setName("");
     if (newCategory === "1")
       setName(
@@ -57,7 +58,7 @@ export const AddTokenForm = (props: {
     setName2(newName2);
   };
   useEffect(() => {
-    if (category === 1)
+    if (category === "1")
       setName(
         (name1 !== "" ? name1 : "NAME1") +
           "-" +
@@ -65,24 +66,54 @@ export const AddTokenForm = (props: {
       );
   }, [name1, name2]);
 
+  const [stakingApr, setStakingApr] = React.useState("");
+  const handleChangeStakingApr = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const newStakingApr = event.target.value;
+    setStakingApr(newStakingApr);
+  };
+
   const [rewardToken, setRewardToken] = React.useState("default");
   const handleChangeRewardToken = (event: SelectChangeEvent) => {
     const newRewardToken = event.target.value;
     setRewardToken(newRewardToken);
   };
 
+  const [adminStakeFee, setAdminStakeFee] = React.useState("");
+  const handleChangeAdminStakeFee = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const newAdminStakeFee = event.target.value;
+    setAdminStakeFee(newAdminStakeFee);
+  };
+
+  const [adminUnstakeFee, setAdminUnstakeFee] = React.useState("");
+  const handleChangeAdminUnstakeFee = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const newAdminUnstakeFee = event.target.value;
+    setAdminUnstakeFee(newAdminUnstakeFee);
+  };
+
   return (
     <React.Fragment>
       <Grid container spacing={3}>
         <Grid item xs={12}>
-          <TextField required label="Address" fullWidth />
+          <TextField
+            required
+            label="Address"
+            fullWidth
+            value={address}
+            onChange={handleChangeAddress}
+          />
         </Grid>
         <Grid item xs={12}>
           <FormControl fullWidth>
             <InputLabel>Category</InputLabel>
             <Select
               label="Category"
-              value={category.toString()}
+              value={category}
               onChange={handleChangeCategory}
             >
               <MenuItem value="0">DEFAULT</MenuItem>
@@ -94,13 +125,13 @@ export const AddTokenForm = (props: {
           <TextField
             required
             label="Name"
-            variant={category !== 0 ? "filled" : undefined}
-            disabled={category !== 0}
+            variant={category === "1" ? "filled" : undefined}
+            disabled={category === "1"}
             fullWidth
             value={name}
             onChange={handleChangeName}
           />
-          {category !== 0 ? (
+          {category === "1" ? (
             <Grid container spacing={3} pt="10px">
               <Grid item xs={6}>
                 <TextField
@@ -132,6 +163,8 @@ export const AddTokenForm = (props: {
               endAdornment: <InputAdornment position="end">%</InputAdornment>,
             }}
             fullWidth
+            value={stakingApr}
+            onChange={handleChangeStakingApr}
           />
         </Grid>
         <Grid item xs={12}>
@@ -162,6 +195,8 @@ export const AddTokenForm = (props: {
               endAdornment: <InputAdornment position="end">%</InputAdornment>,
             }}
             fullWidth
+            value={adminStakeFee}
+            onChange={handleChangeAdminStakeFee}
           />
         </Grid>
         <Grid item xs={6}>
@@ -173,6 +208,8 @@ export const AddTokenForm = (props: {
               endAdornment: <InputAdornment position="end">%</InputAdornment>,
             }}
             fullWidth
+            value={adminUnstakeFee}
+            onChange={handleChangeAdminUnstakeFee}
           />
         </Grid>
         {/* <Grid item xs={12}>
