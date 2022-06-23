@@ -305,7 +305,7 @@ export const useStakeToken = (tokenAddress: string) => {
   const contract = useContract();
   const tokenContract = useTokenContract(tokenAddress);
 
-  const { state: tokenApproveState, send: tokenApproveSend } =
+  const { state: approveTokenState, send: approveTokenSend } =
     useContractFunction(tokenContract, "approve", {
       transactionName: "Approve Token",
     });
@@ -320,14 +320,14 @@ export const useStakeToken = (tokenAddress: string) => {
   const [tokenAmount, setTokenAmount] = useState("0");
   const approveAndStakeToken = (tokenAmount: string) => {
     setTokenAmount(tokenAmount);
-    return tokenApproveSend(contract.address, parseEther(tokenAmount));
+    return approveTokenSend(contract.address, parseEther(tokenAmount));
   };
   useEffect(() => {
-    if (tokenApproveState.status === "Success")
+    if (approveTokenState.status === "Success")
       stakeTokenSend(tokenAddress, parseEther(tokenAmount));
-  }, [tokenApproveState]);
+  }, [approveTokenState]);
 
-  return { approveAndStakeToken, stakeTokenState };
+  return { approveAndStakeToken, approveTokenState, stakeTokenState };
 };
 
 export const useUnstakeToken = (tokenAddress: string) => {
@@ -363,7 +363,7 @@ export const useChangeStakingRewardToken = (tokenAddress: string) => {
     state: changeStakingRewardTokenState,
     send: changeStakingRewardTokenSend,
   } = useContractFunction(contract, "setStakingRewardToken", {
-    transactionName: "changeRewardToken",
+    transactionName: "Change Reward Token",
   });
   const changeStakingRewardToken = (rewardTokenAddress: string) =>
     changeStakingRewardTokenSend(tokenAddress, rewardTokenAddress);

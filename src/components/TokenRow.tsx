@@ -44,7 +44,10 @@ export const TokenRow = (props: {
   );
 
   const token = tokens[tokenIndex];
-  const rewardToken = getTokenByAddress(token.rewardToken, tokens);
+  const rewardToken = tokens.filter(
+    (tokenx) => tokenx.address === token.rewardToken
+  )[0];
+  // const rewardToken = getTokenByAddress(token.rewardToken, tokens);
 
   const [open, setOpen] = React.useState(false);
   const SmallAvatar = styled(Avatar)(({ theme }) => ({

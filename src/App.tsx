@@ -15,12 +15,13 @@ function App() {
         networks: [BSC, BSCTestnet],
         readOnlyChainId: BSCTestnet.chainId,
         readOnlyUrls: {
-          [BSC.chainId]: getDefaultProvider(
-            "https://bsc-dataseed.binance.org/"
-          ),
-          [BSCTestnet.chainId]: getDefaultProvider(
-            "https://data-seed-prebsc-1-s3.binance.org:8545/"
-          ),
+          [BSC.chainId]: "https://bsc-dataseed.binance.org/",
+          [BSCTestnet.chainId]:
+            "https://data-seed-prebsc-1-s3.binance.org:8545/",
+        },
+        notifications: {
+          expirationPeriod: 1000,
+          checkInterval: 1000,
         },
       }}
     >

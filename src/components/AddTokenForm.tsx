@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { useEthers } from "@usedapp/core";
+import { useEthers, useNotifications } from "@usedapp/core";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
@@ -22,6 +22,8 @@ export const AddTokenForm = (props: {
   const { tokens, tokensAreUpdated } = props;
   const { account: walletAddress } = useEthers();
   // const walletIsConnected = walletAddress !== undefined;
+
+  const { notifications } = useNotifications();
 
   const [address, setAddress] = React.useState("");
   const handleChangeAddress = (event: React.ChangeEvent<HTMLInputElement>) => {

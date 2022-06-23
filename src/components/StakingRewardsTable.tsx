@@ -19,7 +19,10 @@ export const StakingRewardsTable = (props: {
   tokens: Token[];
 }) => {
   const { token, tokens } = props;
-  const rewardToken = getTokenByAddress(token.rewardToken, tokens);
+  const rewardToken = tokens.filter(
+    (tokenx) => tokenx.address === token.rewardToken
+  )[0];
+  // const rewardToken = getTokenByAddress(token.rewardToken, tokens);
 
   const { account: walletAddress } = useEthers();
   const walletIsConnected = walletAddress !== undefined;

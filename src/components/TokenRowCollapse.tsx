@@ -1,9 +1,10 @@
 import React, { useEffect } from "react";
-import { useEthers } from "@usedapp/core";
+import { useEthers, useNotifications } from "@usedapp/core";
 import { constants } from "ethers";
 import {
   Box,
   Button,
+  CircularProgress,
   // CircularProgress,
   FormControl,
   InputAdornment,
@@ -50,15 +51,68 @@ function Actions(props: {
   const { account: walletAddress } = useEthers();
   const walletIsConnected = walletAddress !== undefined;
 
-  const { approveAndStakeToken, stakeTokenState } = useStakeToken(
-    token.address
-  );
+  const { notifications } = useNotifications();
+  const [notify, setNotify] = React.useState("");
+  useEffect(() => {
+    if (
+      notifications.filter(
+        (notification) =>
+          notification.type === "transactionSucceed" &&
+          notification.transactionName === "Approve Token"
+      ).length > 0
+    )
+      setNotify(`Approved ${tabAmount} ${token.name} tokens.`);
+
+    if (
+      notifications.filter(
+        (notification) =>
+          notification.type === "transactionSucceed" &&
+          notification.transactionName === "Stake Token"
+      ).length > 0
+    )
+      setNotify(`Staked ${tabAmount} ${token.name} tokens.`);
+
+    if (
+      notifications.filter(
+        (notification) =>
+          notification.type === "transactionSucceed" &&
+          notification.transactionName === "Unstake Token"
+      ).length > 0
+    )
+      setNotify(`Unstaked ${tabAmount} ${token.name} tokens.`);
+
+    if (
+      notifications.filter(
+        (notification) =>
+          notification.type === "transactionSucceed" &&
+          notification.transactionName === "Withdraw Reward Token"
+      ).length > 0
+    )
+      setNotify(`Withdrew ${tabAmount} ${token.name} reward tokens.`);
+
+    if (
+      notifications.filter(
+        (notification) =>
+          notification.type === "transactionSucceed" &&
+          notification.transactionName === "Change Reward Token"
+      ).length > 0
+    )
+      setNotify(`Changed ${token.name} staking reward token.`);
+  }, [notifications]);
+
+  const { approveAndStakeToken, approveTokenState, stakeTokenState } =
+    useStakeToken(token.address);
   const { unstakeToken, unstakeTokenState } = useUnstakeToken(token.address);
   const { withdrawRewardToken, withdrawRewardTokenState } =
     useWithdrawRewardToken(token.address);
   const { changeStakingRewardToken, changeStakingRewardTokenState } =
     useChangeStakingRewardToken(token.address);
 
+  const tabOptionIsMining =
+    approveTokenState.status === "Mining" ||
+    stakeTokenState.status === "Mining" ||
+    unstakeTokenState.status === "Mining" ||
+    withdrawRewardTokenState.status === "Mining";
   const [tabOption, setTabOption] = React.useState("stake");
   const handleChangeTabOption = (
     event: React.SyntheticEvent,
@@ -87,6 +141,8 @@ function Actions(props: {
     if (tabOption === "withdraw reward") withdrawRewardToken(tabAmount);
   };
 
+  const stakingRewardTokenIsMining =
+    changeStakingRewardTokenState.status === "Mining";
   const [stakingRewardToken, setStakingRewardToken] = React.useState(
     token.stakerData.stakingRewardToken !== constants.AddressZero
       ? token.stakerData.stakingRewardToken
@@ -118,6 +174,7 @@ function Actions(props: {
             <InputLabel>Reward Token</InputLabel>
             <Select
               label="Reward Token"
+              disabled={stakingRewardTokenIsMining}
               value={stakingRewardToken}
               onChange={handleChangeStakingRewardToken}
             >
@@ -125,7 +182,11 @@ function Actions(props: {
                 tokens.map((token) =>
                   token.hasMultiTokenRewards === true ? (
                     <MenuItem key={token.name} value={token.address}>
-                      {token.name}
+                      {stakingRewardTokenIsMining ? (
+                        <CircularProgress size={15} />
+                      ) : (
+                        token.name
+                      )}
                     </MenuItem>
                   ) : null
                 )
@@ -178,9 +239,10 @@ function Actions(props: {
                 variant="contained"
                 size="large"
                 color="secondary"
+                disabled={tabOptionIsMining}
                 onClick={handleClickTabButton}
               >
-                {tabOption}
+                {tabOptionIsMining ? <CircularProgress size={25} /> : tabOption}
               </Button>
             )}
           </TabPanel>
@@ -197,7 +259,10 @@ export const TokenRowCollapse = (props: {
 }) => {
   const { tokenIndex, tokens, tokensAreUpdated } = props;
   const token = tokens[tokenIndex];
-  const rewardToken = getTokenByAddress(token.rewardToken, tokens);
+  const rewardToken = tokens.filter(
+    (tokenx) => tokenx.address === token.rewardToken
+  )[0];
+  // const rewardToken = getTokenByAddress(token.rewardToken, tokens);
 
   // const { account: walletAddress } = useEthers();
   // const walletIsConnected = walletAddress !== undefined;
